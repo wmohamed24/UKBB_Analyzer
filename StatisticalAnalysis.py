@@ -25,7 +25,6 @@ from rpy2.robjects.conversion import localconverter
 import rpy2.robjects as ro
 import plotly.graph_objects as go
 import itertools
-from matplotlib.patches import PathPatch
 
 
 

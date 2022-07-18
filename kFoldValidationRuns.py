@@ -1,8 +1,5 @@
 import os
-from scipy import rand
-from sqlalchemy import column
-import kFoldValidationProcess as kFoldstats 
-import ranking_subset_run as rsr
+import RunClassifiers as runC
 import ClassFeatureStats as st
 import multiprocessing as mp
 import numpy as np
@@ -46,7 +43,12 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     if not os.path.exists(classifiersPath):
         os.makedirs(classifiersPath)
 
-    kFoldstats.baseline(data, target, STATS_path)
+    f = open(STATS_path+'Baseline.txt','w+')
+    rate = sum(data[target])/data.shape[0]
+    f.write('base line accuracy is '+str( max(rate,1-rate))+'\n')
+    f1 = 2*rate/(1+rate)
+    f.write('base line f1 value is '+str(f1))
+    f.close()
 
     data = data.copy(deep = True)
     X = data.drop(target, axis = 1)
@@ -64,22 +66,12 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     #st.feature_summaryNew(target_path, X.columns, fselect, 100, 0.7)
     fselect.append('robust')
 
-    for fs in fselect:
-        for c in classifiers:
-            classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
-    
-
     for i in classifiersInput:
-       rsr.classify(i)
-    
-    #pool.map(rsr.classify, classifiersInput)
-    #pool.close()
-
+       runC.classify(i)
     #rsr.Stack((target_path, classifiers, fselect, X, y, n_seed, splits))
     
     st.create_STATS(target_path)
     st.heatmap(target_path, target, True)
     st.heatmap(target_path, target, False)
-    #st.feature_summary(target_path, X.columns, fselect)
     
     
