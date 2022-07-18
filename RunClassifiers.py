@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import featureselection as fselect
 from sklearn.model_selection import train_test_split
 from imblearn.pipeline import Pipeline, make_pipeline
 from sklearn.model_selection import KFold, GridSearchCV, StratifiedKFold

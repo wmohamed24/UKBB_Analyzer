@@ -18,7 +18,7 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "SendToWaelOHC" #name of the data file in the data folder
+    datafile = "total_dataset_non_binary" #name of the data file in the data folder
     targetBinary = "GAD7_1" #name of the binarized dependent variable 
     targetContinous = "GAD7" #name of the dependent variable as continues
 
@@ -85,7 +85,7 @@ def main():
     #cols.remove(targetBinary)
     #unlab = unlab[cols]
 
-    runs.NormalRun(data, directory_path, datafile, targetBinary, classifiers, fselect, n_seed, splits, ensemble=True)
+    #runs.NormalRun(data, directory_path, datafile, targetBinary, classifiers, fselect, n_seed, splits, ensemble=True)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -187,8 +187,9 @@ def main():
     data.columns = data.columns.str.replace(' ', '.')
     
     '''
-    '''
+    
     data.columns = data.columns.str.replace(' ', '_')
+    data.columns = data.columns.str.replace('.', '_')
 
     for col in data.columns:
         if '.' in col:
@@ -204,13 +205,9 @@ def main():
         
     if targetContinous in continuous:
         continuous.remove(targetContinous)
-    data.drop(continuous, axis = 1, inplace=True)
+    #data.drop(continuous, axis = 1, inplace=True)
 
-    for col in data.columns:
-        if not col == 'GAD7' and not col == 'sex_1':
-            StatisticalAnalysis.ANOVA(data=data, path=directory_path, dep='GAD7', indep=[col], oneWay = True)
-            break
-    '''
+    
 
     #print(cat)
     #print (continuous)
@@ -220,5 +217,5 @@ def main():
     #oddsRatios = StatisticalAnalysis.Odds_Ratios(data = data, path = directory_path, target=targetBinary, continuous=continuous, stepwise=False)
     #assAnalyis = StatisticalAnalysis.Association_Analysis(data = data, path = directory_path, vars = data.drop([targetBinary]+continuous, axis = 1))
     #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = directory_path, rhs = 'GAD7_1')
-
+    StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', med='Townsend_deprivation_index_at_recruitment', indep = 'rs17031614_1_rs2287161', path = statsPath, continuous=continuous)
 main()

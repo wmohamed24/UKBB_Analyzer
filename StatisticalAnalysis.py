@@ -1,5 +1,3 @@
-from turtle import width
-from pingouin import mediation_analysis as ma
 import numpy as np
 import statsmodels.formula.api as smf
 from linearmodels.iv import IV2SLS
@@ -12,19 +10,16 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from scipy import stats
 import matplotlib.pyplot as plt
 import seaborn as sns
-from statsmodels.graphics.factorplots import interaction_plot
 import os
 from statsmodels.genmod.generalized_linear_model import GLM
 from statsmodels.genmod import families
-import scikit_posthocs as sp
-from sklearn.linear_model import LogisticRegression
 from rpy2.robjects.packages import importr
 from rpy2.robjects import r, pandas2ri, numpy2ri
 numpy2ri.activate()
 from rpy2.robjects.conversion import localconverter
 import rpy2.robjects as ro
-import plotly.graph_objects as go
 import itertools
+import gower
 
 
 
@@ -93,8 +88,8 @@ def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
     '''
     data = data.copy(deep = True)
 
-    if not os.path.exists(path + 'MediationAnalysis'):
-        os.makedirs(path +'MediationAnalysis')
+    if not os.path.exists(path + 'MediationAnalysis/'):
+        os.makedirs(path +'MediationAnalysis/')
     currPath = path + 'MediationAnalysis/'
 
     if type(indep) == str:
@@ -103,12 +98,17 @@ def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
     for var in indep:
         filePath = currPath+'MedAnalysis-'+str(var) + '-' + str(med) + '-' + str(dep) + '.txt'
 
-        med = importr('mediation')
+        temp = importr('mediation')
         formulaMake = r['as.formula']
-        mediate, lm, glm, summary, capture = r['mediate'], r['lm'], r['glm'], r['glm'], r['capture.output']
+        mediate, lm, glm, summary, capture = r['mediate'], r['lm'], r['glm'], r['summary'], r['capture.output']
 
         MediationFormula = formulaMake(med + ' ~ ' + var)
         OutcomeFormula = formulaMake(dep + ' ~ ' + var + ' + ' + med)
+
+        with localconverter(ro.default_converter + pandas2ri.converter):
+            data = ro.conversion.py2rpy(data)
+
+        print(type(data))
 
         if med in continuous:
             modelM = lm(MediationFormula, data) 
