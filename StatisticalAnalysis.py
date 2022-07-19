@@ -19,7 +19,6 @@ numpy2ri.activate()
 from rpy2.robjects.conversion import localconverter
 import rpy2.robjects as ro
 import itertools
-import gower
 
 
 
@@ -51,9 +50,9 @@ def Association_Rule_Learning(data, path, min_support = 0.0045, min_confidence =
             data.drop([col], axis = 1, inplace = True)
     
  
-    if not os.path.exists(path+'StatisticalAnalysis/Apriori'):
-        os.makedirs(path+'StatisticalAnalysis/Apriori')
-    currPath = path + 'StatisticalAnalysis/Apriori/'
+    if not os.path.exists(path+'Apriori'):
+        os.makedirs(path+'Apriori')
+    currPath = path + 'Apriori/'
 
     data.to_csv(currPath + 'AprioriData.csv')
     args = currPath + ' ' + str(min_support) + ' '  + str(min_confidence) + ' ' + str(max_items) + ' ' + str(min_items) + ' ' + str(rhs)
@@ -69,7 +68,7 @@ def Association_Rule_Learning(data, path, min_support = 0.0045, min_confidence =
     return AssRules
 
 
-def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
+def Mediation_Analysis(data, dep, mediator, indep, path, continuous = list()):
     '''
     Do Mediation Analysis between the passed dependent & indepent variables 
     and the mediation variable(s) passed in the passed data frame. 
@@ -78,7 +77,7 @@ def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
     Args:
         data: DataFrame containing the items of interest
         dep: The dependent varaible in the analysis
-        med: The mediation variable in the analysis
+        mediator: The mediation variable in the analysis
         indep: The independent variable(s) in the analysis - can be a list
         path: Folder path to which the data will be saved
         continuous: list containing continuous variables
@@ -93,24 +92,23 @@ def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
     currPath = path + 'MediationAnalysis/'
 
     if type(indep) == str:
-        indep = list(indep)
+        t = list(); t.append(indep)
+        indep = t
 
     for var in indep:
-        filePath = currPath+'MedAnalysis-'+str(var) + '-' + str(med) + '-' + str(dep) + '.txt'
+        filePath = currPath+'MedAnalysis-'+str(var) + '-' + str(mediator) + '-' + str(dep) + '.txt'
 
-        temp = importr('mediation')
+        l1 = importr('mediation')
         formulaMake = r['as.formula']
         mediate, lm, glm, summary, capture = r['mediate'], r['lm'], r['glm'], r['summary'], r['capture.output']
 
-        MediationFormula = formulaMake(med + ' ~ ' + var)
-        OutcomeFormula = formulaMake(dep + ' ~ ' + var + ' + ' + med)
+        MediationFormula = formulaMake(mediator + ' ~ ' + var)
+        OutcomeFormula = formulaMake(dep + ' ~ ' + var + ' + ' + mediator)
 
         with localconverter(ro.default_converter + pandas2ri.converter):
             data = ro.conversion.py2rpy(data)
 
-        print(type(data))
-
-        if med in continuous:
+        if mediator in continuous:
             modelM = lm(MediationFormula, data) 
         else:
             modelM = glm(MediationFormula, data = data, family = "binomial")
@@ -120,14 +118,13 @@ def Mediation_Analysis(data, dep, med, indep, path, continuous = list()):
         else:
             modelY = glm(OutcomeFormula, data = data, family = "binomial")
         
-        results = mediate(modelM, modelY, treat=var, mediator=med)
-        dfR = summary(results)
-        
+        results = mediate(modelM, modelY, treat=var, mediator=mediator)
+        dfR = summary(results)        
         capture(dfR, file = filePath)
 
 
 
-def Mendelian_Ranomization(data, dep, indep, control, inst, path):
+def Mendelian_Ranomization(data, dep, indep, inst, path, control = list()):
     '''
     Conduct Mendelian Ranomization analysis using 2-Stage-Least-Square between 
     the dependent and independent variables passed based on the instrumental variables 
@@ -151,6 +148,16 @@ def Mendelian_Ranomization(data, dep, indep, control, inst, path):
     MendAnalysis = open(currPath + 'Mendelian_Ranomization.txt', 'w')
     MendAnalysis.write('Mendelian Randomization Analysis Results: \n----------------------------------------------------------------------------------------\n\n')
     data = data.copy(deep = True)
+
+    if type(control) == str:
+        t = list()
+        t.append(control)
+        control = t
+
+    if type(inst) == str:
+        t = list()
+        t.append(inst)
+        inst = t
 
     formula = dep + ' ~'
     for var in control:
@@ -223,9 +230,9 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
     indep = list(data)
     indep.remove(target)
     
-    if not os.path.exists(path+'StatisticalAnalysis/MultiVarRegression'):
-        os.makedirs(path+'StatisticalAnalysis/MultiVarRegression')
-    currPath = path + 'StatisticalAnalysis/MultiVarRegression/'
+    if not os.path.exists(path+'MultiVarRegression'):
+        os.makedirs(path+'MultiVarRegression')
+    currPath = path + 'MultiVarRegression/'
 
     MultiReg = open(currPath + 'MultivariateRegression.txt', 'w')
 
@@ -517,9 +524,9 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
         if distinct > 10:
             continuous.append(col)
 
-    if not os.path.exists(path+'StatisticalAnalysis/OddsRatios'):
-        os.makedirs(path+'StatisticalAnalysis/OddsRatios')
-    currPath = path + 'StatisticalAnalysis/OddsRatios/'
+    if not os.path.exists(path+'OddsRatios'):
+        os.makedirs(path+'OddsRatios')
+    currPath = path + 'OddsRatios/'
 
     if not os.path.exists(currPath + 'UnivariateLogistic/'):
             os.makedirs(currPath + 'UnivariateLogistic/')
@@ -685,12 +692,12 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
 
 def oneWay_ANOVA(data, dep, indep, alpha, between, followUp, path):
     results = dict()
-    if not os.path.exists(path+'StatisticalAnalysis/oneWayANOVA'):
-        os.makedirs(path+'StatisticalAnalysis/oneWayANOVA')
+    if not os.path.exists(path+'oneWayANOVA'):
+        os.makedirs(path+'oneWayANOVA')
 
-    if not os.path.exists(path+'StatisticalAnalysis/oneWayANOVA/'+indep):
-        os.makedirs(path+'StatisticalAnalysis/oneWayANOVA/'+indep)
-    currPath = path+'StatisticalAnalysis/oneWayANOVA/'+indep+'/'
+    if not os.path.exists(path+'oneWayANOVA/'+indep):
+        os.makedirs(path+'oneWayANOVA/'+indep)
+    currPath = path+'oneWayANOVA/'+indep+'/'
 
     formula = dep + ' ~ C(' + indep + ')'
     oneWayANOVA = open(currPath+'oneWayANOVA_summary.txt', 'w')
@@ -844,12 +851,12 @@ def oneWay_ANOVA(data, dep, indep, alpha, between, followUp, path):
 def twoWay_ANOVA(data, dep, indep, alpha, between, followUp, path):
         
     results = dict()
-    if not os.path.exists(path+'StatisticalAnalysis/twoWayANOVA'):
-        os.makedirs(path+'StatisticalAnalysis/twoWayANOVA')
+    if not os.path.exists(path+'twoWayANOVA'):
+        os.makedirs(path+'twoWayANOVA')
     fname = indep[0] + '_' + indep[1]
-    if not os.path.exists(path+'StatisticalAnalysis/twoWayANOVA/'+fname):
-        os.makedirs(path+'StatisticalAnalysis/twoWayANOVA/'+fname)
-    currPath = path+'StatisticalAnalysis/twoWayANOVA/'+fname+'/'
+    if not os.path.exists(path+'twoWayANOVA/'+fname):
+        os.makedirs(path+'twoWayANOVA/'+fname)
+    currPath = path+'twoWayANOVA/'+fname+'/'
 
     formula = dep + ' ~ C(' + indep[0] + ') + C(' + indep[1] + ') + C(' + indep[0] + '):C(' + indep[1] + ')'
     twoWayANOVA = open(currPath+'twoWayANOVA_summary.txt', 'w')
@@ -1069,9 +1076,9 @@ def Association_Analysis(data, path, vars, oneTarget = False, target = '', chi =
         a data frame containing the results for chi-square, fisher, and g tests
     '''
     data = data.copy(deep = True)
-    if not os.path.exists(path+'StatisticalAnalysis/AssociationAnalysis'):
-        os.makedirs(path+'StatisticalAnalysis/AssociationAnalysis')
-    currPath = path + 'StatisticalAnalysis/AssociationAnalysis/'
+    if not os.path.exists(path+'AssociationAnalysis'):
+        os.makedirs(path+'AssociationAnalysis')
+    currPath = path + 'AssociationAnalysis/'
     
     #results = pd.DataFrame(columns=['var1-var2','Pearson-Chi-square', 'Chi-p-value', "Chi-Cramer's-phi",
     #    'Fisher-Odds-ratio', 'Fisher-2-sided-p-value', "Fisher-Cramer's-phi", 'G-Test-Log-likelihood-ratio', 

@@ -197,7 +197,7 @@ def classify(myTuple):
         parms, itr = getParameters(c)
         parms = {'myclassifier__' + key: parms[key] for key in parms}
 
-        grid_imba = BayesSearchCV(_pipeline, search_spaces=parms, cv=cv, n_iter=itr, refit = False, n_jobs=-1)
+        grid_imba = BayesSearchCV(_pipeline, search_spaces=parms, cv=cv, n_iter=itr, refit = False, n_jobs=-1, n_points=5)
         grid_imba.fit(X_train.values, y_train.values)
         best = grid_imba.best_params_
 

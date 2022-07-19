@@ -18,15 +18,39 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "total_dataset_non_binary" #name of the data file in the data folder
+    datafile = "SendToWaelOHC" #name of the data file in the data folder
     targetBinary = "GAD7_1" #name of the binarized dependent variable 
     targetContinous = "GAD7" #name of the dependent variable as continues
+
+    
 
     #Specify which data file type youa are using
     
     data = pd.read_csv(directory_path+"data/"+datafile+".csv", index_col=0)
+
+    '''
+    data.columns = data.columns.str.replace(' ', '_')
+    data.columns = data.columns.str.replace('.', '_')
+
+    continuous = list()
+    categorical = list()
+    for col in data.columns:
+        distinct = data[col].dropna().nunique()
+        if distinct > 10:
+            continuous.append(col)  
+        elif distinct > 2:
+            categorical.append(col)
+
+    MinMax = pd.DataFrame(columns = continuous, index = ['min', 'max'])
+    for col in continuous:
+        MinMax.loc['max', col] = data[col].max()
+        MinMax.loc['min', col] = data[col].min()
+    scaler = MinMaxScaler()
+    data[continuous] = scaler.fit_transform(data[continuous])
+    '''
+
     data = data.sample(1000)
-    data = resample(data, replace=False, n_samples=int(len(data)/3), random_state=42)
+    #data = resample(data, replace=False, n_samples=int(len(data)/3), random_state=42)
 
 
     #data = data.reset_index()
@@ -72,15 +96,15 @@ def main():
     # #Classification
 
     #Keep the classification and feature selection methods that you want
-    #classifiers=['logreg', 'xgboost', 'elasticnet', 'naiveBayes', 'LDA', 'rdforest', 'knn', 'svm']
-    classifiers = ['xgboost']
+    classifiers=['xgboost', 'LDA', 'rdforest', 'svm']
+    #classifiers = ['xgboost']
     #replace the # with the number of features you want
-    fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50', 'fcbf', 'cfs'] 
+    fselect=['AllFeatures', 'infogain_10', 'reliefF_10', 'jmi_10', 'mrmr_10']#, 'chisquare_10', 'fcbf', 'cfs'] 
     #fselect = ['AllFeatures'] 
     #Note that cfs and fcbf find all the significant features so they don't need a number
 
-    n_seed = 2 #Number of validations
-    splits = 5 #Number of folds or splits in each validation run
+    n_seed = 10 #Number of validations
+    splits = 2 #Number of folds or splits in each validation run
     #cols = dataHotBinary.columns.tolist()
     #cols.remove(targetBinary)
     #unlab = unlab[cols]
@@ -206,7 +230,7 @@ def main():
     if targetContinous in continuous:
         continuous.remove(targetContinous)
     #data.drop(continuous, axis = 1, inplace=True)
-
+    
     
 
     #print(cat)
@@ -217,5 +241,7 @@ def main():
     #oddsRatios = StatisticalAnalysis.Odds_Ratios(data = data, path = directory_path, target=targetBinary, continuous=continuous, stepwise=False)
     #assAnalyis = StatisticalAnalysis.Association_Analysis(data = data, path = directory_path, vars = data.drop([targetBinary]+continuous, axis = 1))
     #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = directory_path, rhs = 'GAD7_1')
-    StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', med='Townsend_deprivation_index_at_recruitment', indep = 'rs17031614_1_rs2287161', path = statsPath, continuous=continuous)
+    #StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
+    #print(data.columns)
+    StatisticalAnalysis.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
 main()

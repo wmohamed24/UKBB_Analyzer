@@ -42,28 +42,7 @@ def shaplyValue(model, X, y, path):
         shap.plots.scatter(shap_values[:,feature], show = False)
         plt.savefig(path+feature+'ScatterPlot.png', bbox_inches='tight',dpi=300)
         plt.close()
-  
 
-def feature_summaryOld(path, features, fselect):
-    os.chdir(path+'results/featureSelection')
-    f_summary = pd.DataFrame([], columns=['feature']+fselect)
-    for f in features:
-        f_summary.loc[len(f_summary.index)] = [f]+[0 for x in range(len(fselect))]
-    for file in glob.glob("*.txt"):
-        if 'fold' in file:
-            feature = file.split('_repeat')[0]
-        else:
-            feature = file.split('trainSelect')[0]
-        
-        with open(file, 'r') as f:
-            index = np.array([float(field) for field in f.read().split()]).astype(int)
-        for i in index:
-            f_summary.at[i,feature] += 1
-    
-    f_summary['TOTAL'] = f_summary.sum(axis=1, numeric_only=True)
-    f_summary = f_summary.sort_values(by=['TOTAL'], ascending=False)
-    f_summary.to_csv(path+'/STATS/FeatureSelectionSummary.csv',index=True)
-    return f_summary
 
 def feature_summaryNew(path, features, fselect, n_itr, cutoff):
     if not os.path.exists(path+'/STATS/featureSelection/'):
@@ -120,7 +99,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
     f_summaryFinal.to_csv(path+'/STATS/featureSelection/robust.csv',index=True)
 
     outcomeIndex = list()
-    for x in range(median(featuresSelected)):
+    for x in range(int(median(featuresSelected))):
         outcomeIndex.append(f_summary.at[x, 'index'])
     
     toWrite = open(path+'results/features/robustFinal.txt', 'a')

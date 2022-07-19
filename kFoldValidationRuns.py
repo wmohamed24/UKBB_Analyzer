@@ -60,10 +60,12 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     classifiersInput = list()
     stackInput = list()
 
-    
+    for fs in fselect:
+        for c in classifiers:
+            classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
 
-    #runFs.fselectNew((data, target, 100, fselect, target_path))
-    #st.feature_summaryNew(target_path, X.columns, fselect, 100, 0.7)
+    #runFs.fselectNew((data, target, 30, fselect, target_path))
+    #st.feature_summaryNew(target_path, X.columns, fselect, 30, 0.7)
     fselect.append('robust')
 
     for i in classifiersInput:
