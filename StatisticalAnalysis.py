@@ -21,8 +21,6 @@ import rpy2.robjects as ro
 import itertools
 
 
-
-
 plt.rcParams['figure.dpi'] = 300
 plt.rcParams['savefig.dpi'] = 300
 
