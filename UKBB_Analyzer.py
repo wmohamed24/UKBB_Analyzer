@@ -18,7 +18,7 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "SendToWaelOHC" #name of the data file in the data folder
+    datafile = "sample" #name of the data file in the data folder
     targetBinary = "GAD7_1" #name of the binarized dependent variable 
     targetContinous = "GAD7" #name of the dependent variable as continues
 
@@ -49,7 +49,7 @@ def main():
     data[continuous] = scaler.fit_transform(data[continuous])
     '''
 
-    data = data.sample(1000)
+    #data = data.sample(1000)
     #data = resample(data, replace=False, n_samples=int(len(data)/3), random_state=42)
 
 
@@ -99,7 +99,7 @@ def main():
     classifiers=['xgboost', 'LDA', 'rdforest', 'svm']
     #classifiers = ['xgboost']
     #replace the # with the number of features you want
-    fselect=['AllFeatures', 'infogain_10', 'reliefF_10', 'jmi_10', 'mrmr_10']#, 'chisquare_10', 'fcbf', 'cfs'] 
+    fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50', 'fisher_50', 'fcbf', 'cfs'] 
     #fselect = ['AllFeatures'] 
     #Note that cfs and fcbf find all the significant features so they don't need a number
 
@@ -109,7 +109,7 @@ def main():
     #cols.remove(targetBinary)
     #unlab = unlab[cols]
 
-    #runs.NormalRun(data, directory_path, datafile, targetBinary, classifiers, fselect, n_seed, splits, ensemble=True)
+    runs.NormalRun(data, directory_path, datafile, targetBinary, classifiers, fselect, n_seed, splits, ensemble=True)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -208,10 +208,10 @@ def main():
 
     vars.append(targetBinary)
     data = data[vars]
-    data.columns = data.columns.str.replace(' ', '.')
+    
     
     '''
-    
+    data.columns = data.columns.str.replace(' ', '.')
     data.columns = data.columns.str.replace(' ', '_')
     data.columns = data.columns.str.replace('.', '_')
 
@@ -243,5 +243,5 @@ def main():
     #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = directory_path, rhs = 'GAD7_1')
     #StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
     #print(data.columns)
-    StatisticalAnalysis.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
+    #StatisticalAnalysis.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
 main()

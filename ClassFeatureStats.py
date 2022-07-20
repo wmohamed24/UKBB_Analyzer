@@ -99,7 +99,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
     f_summaryFinal.to_csv(path+'/STATS/featureSelection/robust.csv',index=True)
 
     outcomeIndex = list()
-    for x in range(int(median(featuresSelected))):
+    for x in range(int(25)):
         outcomeIndex.append(f_summary.at[x, 'index'])
     
     toWrite = open(path+'results/features/robustFinal.txt', 'a')

@@ -55,25 +55,32 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     y = data[target]
 
     mp.set_start_method('fork')
-    pool = mp.Pool(int(mp.cpu_count()))
+    #pool = mp.Pool(int(2))
     
     classifiersInput = list()
     stackInput = list()
-
     for fs in fselect:
         for c in classifiers:
+            #t = (target_path, X, y, n_seed, splits, c, fs, data.columns)
             classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
+            #process = mp.Process(target=runC.classify, args=(t))
+            #process.start()
+            
 
-    #runFs.fselectNew((data, target, 30, fselect, target_path))
-    #st.feature_summaryNew(target_path, X.columns, fselect, 30, 0.7)
-    fselect.append('robust')
+    runFs.fselectNew((data, target, 300, fselect, target_path))
+    st.feature_summaryNew(target_path, X.columns, fselect, 300, 0.7)
+    #fselect.append('robust')
 
-    for i in classifiersInput:
-       runC.classify(i)
+    #pool.dae
+    #pool.map(runC.classify, classifiersInput)
+    #pool.close()
+
+    #for i in classifiersInput:
+    #   runC.classify(i)
     #rsr.Stack((target_path, classifiers, fselect, X, y, n_seed, splits))
     
-    st.create_STATS(target_path)
-    st.heatmap(target_path, target, True)
-    st.heatmap(target_path, target, False)
+    #st.create_STATS(target_path)
+    #st.heatmap(target_path, target, True)
+    #st.heatmap(target_path, target, False)
     
     
