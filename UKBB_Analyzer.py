@@ -51,27 +51,29 @@ def main():
     #Keep the classification and feature selection methods that you want
     classifiers=['xgboost', 'LDA', 'rdforest', 'logreg']#, 'svm']
     #replace the # with the number of features you want
-    #fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50', 'fisher_50', 'fcbf', 'cfs'] 
-    fselect = ['AllFeatures', 'mrmr_50', 'chisquare_50']
+    fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50', 'fisher_50', 'fcbf', 'cfs'] 
+    #fselect = ['AllFeatures', 'mrmr_50', 'chisquare_50']
     #Note that cfs and fcbf find all the significant features so they don't need a number
 
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, ensemble=True)
+    #runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, ensemble=True)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
 
     #Statistical Analysis
-
-    
+    '''
+    cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
+    'rs10462020_2.rs17031614_2', 'rs228697_2.rs10462020_2', 'rs228697_2.rs10462020_1', 'rs228697_1.rs10462020_2', 'GAD7_1']
 
     #cols = distill(cols)
 
-    #data = data[cols]
-    data.columns = data.columns.str.replace(' ', '_')
-    data.columns = data.columns.str.replace('.', '_')
+    data = data[cols]
+
+    for col in cols:
+        print(data[col].value_counts())
     
     continuous = list()
     categorical = list()
@@ -96,10 +98,11 @@ def main():
     #StatisticalAnalysis.ANOVA(data = data, path = statsPath, dep = target, indep=['sex'], oneWay=True)
     #Uncomment the staistical test desired and pass the suitable parameters
 
-    #MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
+    MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
     #oddsRatios = StatisticalAnalysis.Odds_Ratios(data = data, path = statsPath, target=target, continuous=continuous, stepwise=True, categorical=categorical)
     #assAnalyis = StatisticalAnalysis.Association_Analysis(data = data, path = directory_path, vars = data.drop([targetBinary]+continuous, axis = 1))
     #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = statsPath, rhs = 'GAD7_1')
     #StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
     #StatisticalAnalysis.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
+    '''
 main()
