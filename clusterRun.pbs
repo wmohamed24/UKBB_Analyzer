@@ -1,9 +1,9 @@
-#PBS -l nodes=10:ppn=32
+#PBS -l nodes=5:ppn=32
 #PBS -l walltime=100:00:00
 #PBS -e error.txt
 #PBS -o output.txt
 #PBS -m abe
 #PBS -M wmohamed@colgate.edu
-cd /home/wmohamed/MoodDisorderResearchCopy
+cd /home/wmohamed/UKBB_Analyzer
 /home/wmohamed/anaconda3/envs/myenv
 python3 UKBB_Analyzer.py

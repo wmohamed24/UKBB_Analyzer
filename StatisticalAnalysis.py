@@ -25,7 +25,7 @@ plt.rcParams['figure.dpi'] = 300
 plt.rcParams['savefig.dpi'] = 300
 
     
-def Association_Rule_Learning(data, path, min_support = 0.0045, min_confidence = 0.2, min_items = 2, max_items = 5, rhs = 'none'):
+def Association_Rule_Learning(data, path, min_support = 0.00045, min_confidence = 0.02, min_items = 2, max_items = 5, rhs = 'none'):
     ''' 
     Do Association Rules mining for the items within the passed dataframe. Write all the found 
     association rules that meet the specified conditions and save the produced graphs
@@ -201,7 +201,7 @@ def Mendelian_Ranomization(data, dep, indep, inst, path, control = list()):
     return iv2sls
 
 
-def Multivariate_Reg(data, path, target, continuous, categorical, correct = False, cutoff = 10, stepwise = True, VIF_values = list()):
+def Multivariate_Reg(data, path, target, continuous, categorical, correct = False, cutoff = 10, stepwise = True, VIF = True):
     
     '''
     Conduct Multivariate Regression analysis between the target and independent variables
@@ -214,9 +214,8 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
         correct: boolean variable. If True, variables with high VIF value would be dropped
         cutoff: cutoff value to drop variables based on VIF.
         stepwise: if True, conduct stepwise ajdustment. Otherwise, the function won't.
-        VIF_values: values for which checking for Multicolinearity using VIF is desired
-            if left empty, the test would be applied to continuous variables. 
-            Set to all to apply for all variables
+        VIF: if True, conduct VIF check for multicolinearity over continuous variables
+            if continuous varaibels are fewer than two, the check won't be conducted
         continuous: list containing continuous variables
         categorical: list of categorical variables
 
@@ -289,44 +288,44 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
         
 
     #Check for Multicolinearity
-    
-    vif_data = pd.DataFrame()
-    if not VIF_values:
-        VIF_values = continuous
-    elif VIF_values == 'all' or VIF_values == ['all']:
-        VIF_values = indep
+    if VIF and len(continuous) > 1:
+        vif_data = pd.DataFrame()
+        if not VIF_values:
+            VIF_values = continuous
+        elif VIF_values == 'all' or VIF_values == ['all']:
+            VIF_values = indep
 
-    vif_data["feature"] = VIF_values
-    vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
-                        for i in range(len(VIF_values))]
+        vif_data["feature"] = VIF_values
+        vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
+                            for i in range(len(VIF_values))]
 
-    toDrop = list()        
-    if correct:
-        for i in range(len(vif_data)):
-            if vif_data.iloc[i, 1] > cutoff:
-                toDrop.append(vif_data.iloc[i,0])
+        toDrop = list()        
+        if correct:
+            for i in range(len(vif_data)):
+                if vif_data.iloc[i, 1] > cutoff:
+                    toDrop.append(vif_data.iloc[i,0])
 
-        data.drop(toDrop, axis = 1, inplace = True)
+            data.drop(toDrop, axis = 1, inplace = True)
 
-    vifString = vif_data.to_string(header=True, index=False)
-    
-    MultiReg.write('VIF values without correction to check multicollinearity: \n\n')
-    if not VIF_values:
-        MultiReg.write('VIF check for Multicolinearity was not conducted'+'\n')
-    else:
-        MultiReg.write(vifString+'\n')
-    MultiReg.write('----------------------------------------------------------------------------------------\n\n')
-
-    if correct:
-        for i in toDrop:
-            vif_data = vif_data[vif_data.feature != i]
-            indep.remove(i)
-            data.drop([i], axis = 1, inplace = True)
         vifString = vif_data.to_string(header=True, index=False)
-        MultiReg.write('VIF values after correction to check multicollinearity: \n\n')
-        MultiReg.write(vifString+'\n')
-        MultiReg.write('----------------------------------------------------------------------------------------\n')
-    
+        
+        MultiReg.write('VIF values without correction to check multicollinearity: \n\n')
+        if not VIF_values:
+            MultiReg.write('VIF check for Multicolinearity was not conducted'+'\n')
+        else:
+            MultiReg.write(vifString+'\n')
+        MultiReg.write('----------------------------------------------------------------------------------------\n\n')
+
+        if correct:
+            for i in toDrop:
+                vif_data = vif_data[vif_data.feature != i]
+                indep.remove(i)
+                data.drop([i], axis = 1, inplace = True)
+            vifString = vif_data.to_string(header=True, index=False)
+            MultiReg.write('VIF values after correction to check multicollinearity: \n\n')
+            MultiReg.write(vifString+'\n')
+            MultiReg.write('----------------------------------------------------------------------------------------\n')
+        
 
     #Conduct regression analysis before stepwise adjustment
     X = sm.add_constant(data.drop([target], axis = 1)) 
@@ -391,10 +390,11 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
         os.remove(currPath + 'StepWiseRegData.csv')
         file = open(currPath+ 'stepWiseVars.txt')
         newVars = file.read().split()
+        os.remove(currPath + 'stepWiseVars.txt')
+        
         if '(Intercept)' in newVars:
             newVars.remove('(Intercept)')
-      
-        os.remove(currPath + 'stepWiseVars.txt')
+        
         data = data[newVars + [target]]
     
         #Conduct regression analysis after stepwise adjustment
@@ -489,7 +489,7 @@ def UniVariateLogisitc(X, y, path, continuous, categorical):
     return log_reg.pvalues[1]
 
 
-def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = False, cutoff = 10, stepwise = True, VIF_values = list()):
+def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = False, cutoff = 10, stepwise = True, VIF = True):
 
     '''
     Calculates the odds ratio for the signifcant variables and write the results to Odds_Ratios.txt
@@ -502,9 +502,8 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
         correct: boolean variable. If True, variables with high VIF value would be dropped
         cutoff: Integer value for the cutoff value for VIF
         stepwise: if True, conduct stepwise ajdustment. Otherwise, the function won't.
-        VIF_values: values for which checking for Multicolinearity using VIF is desired
-            if left empty, the test would be applied to all continuous variables.
-            set to all to apply for all the variables
+        VIF: if True, conduct VIF check for multicolinearity over continuous variables
+            if continuous varaibels are fewer than two, the check won't be conducted
         continuous: list containing continuous variables
 
     Returns:
@@ -532,42 +531,43 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
     oddsRatio = open(currPath + 'Odds_Ratios.txt', 'w')
 
     #Checking for Multicolinearity
-
-    vif_data = pd.DataFrame()
-    if not VIF_values:
-        VIF_values = continuous
-    elif VIF_values == 'all' or VIF_values == ['all']:
-        VIF_values = indep
-
-    vif_data["feature"] = VIF_values
-    vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
-                        for i in range(len(VIF_values))]
-
-    toDrop = list()        
-    if correct:
-        for i in range(len(vif_data)):
-            if vif_data.iloc[i, 1] > cutoff:
-                toDrop.append(vif_data.iloc[i,0])
-
-        data.drop(toDrop, axis = 1, inplace = True)
-
-    vifString = vif_data.to_string(header=True, index=False)
     
-    oddsRatio.write('VIF values without correction to check multicollinearity: \n\n')
-    oddsRatio.write(vifString+'\n')
-    oddsRatio.write('----------------------------------------------------------------------------------------\n')
+    if VIF and len(continuous) > 1:
+        vif_data = pd.DataFrame()
+        if not VIF_values:
+            VIF_values = continuous
+        elif VIF_values == 'all' or VIF_values == ['all']:
+            VIF_values = indep
 
-    if correct:
-        for i in toDrop:
-            vif_data = vif_data[vif_data.feature != i]
-            indep.remove(i)
-            data.drop([i], axis = 1, inplace = True)
+        vif_data["feature"] = VIF_values
+        vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
+                            for i in range(len(VIF_values))]
+
+        toDrop = list()        
+        if correct:
+            for i in range(len(vif_data)):
+                if vif_data.iloc[i, 1] > cutoff:
+                    toDrop.append(vif_data.iloc[i,0])
+
+            data.drop(toDrop, axis = 1, inplace = True)
+
         vifString = vif_data.to_string(header=True, index=False)
-        oddsRatio.write('VIF values after correction to check multicollinearity: \n\n')
+        
+        oddsRatio.write('VIF values without correction to check multicollinearity: \n\n')
         oddsRatio.write(vifString+'\n')
         oddsRatio.write('----------------------------------------------------------------------------------------\n')
-    
-    
+
+        if correct:
+            for i in toDrop:
+                vif_data = vif_data[vif_data.feature != i]
+                indep.remove(i)
+                data.drop([i], axis = 1, inplace = True)
+            vifString = vif_data.to_string(header=True, index=False)
+            oddsRatio.write('VIF values after correction to check multicollinearity: \n\n')
+            oddsRatio.write(vifString+'\n')
+            oddsRatio.write('----------------------------------------------------------------------------------------\n')
+        
+        
     #Find odds ratios before stepwise adjustment
     X = sm.add_constant(data.drop([target], axis = 1))
     log_reg = GLM(data[target], X, family=families.Binomial()).fit()
@@ -613,23 +613,23 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
         os.remove(currPath+'StepWiseRegData.csv')
         file = open(currPath+'stepWiseVars.txt')
         newVars = file.read().split()
+        os.remove(currPath+'stepWiseVars.txt')
         if '(Intercept)' in newVars:
             newVars.remove('(Intercept)')
-        
+
         pVal = list()
         for var in newVars:
             pVal.append(UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
         
         corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
         cp = [str(a) for a in corrected_p[1]]
-
-        adjustedPuni = pd.DataFrame(cp, indep)
+  
+        adjustedPuni = pd.DataFrame(cp, newVars)
         univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
         univariate.write('P-Values after adjustement for univariate regression: \n\n')
         toWrite = adjustedPuni.to_string(header = True, index = True)
         univariate.write(toWrite+'\n')
         
-        os.remove(currPath+'stepWiseVars.txt')
         data = data[newVars + [target]]
 
         #Find odds ratios after stepwise adjustment
@@ -1063,7 +1063,7 @@ def Association_Analysis(data, path, vars, oneTarget = False, target = '', chi =
     Args:
         data: DataFrame containing the items of interest
         path: Folder path to which the data will be saved
-        var: list of variables to apply the tests to. Have to contain at least two
+        vars: list of variables to apply the tests to. Have to contain at least two
         oneTarget: if True, the analysis would be done against the specified variable.
             If True, the parameter target must be passed
         target: the variable of interest to test other vraiales against
@@ -1098,7 +1098,7 @@ def Association_Analysis(data, path, vars, oneTarget = False, target = '', chi =
             rows.append([str(var1)+'-'+str(target), 
             g[0][0], g[1][0], g[2][0], exp])
             if exp < 0.8:
-                belowThreshhold.append(var1, target)
+                belowThreshhold.append((var1, target))
 
         elif not oneTarget:
             tempList.remove(var1)

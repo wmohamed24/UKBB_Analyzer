@@ -55,21 +55,23 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     y = data[target]
 
     mp.set_start_method('fork')
-    #pool = mp.Pool(int(2))
+    fselect.append('robust')
     
     classifiersInput = list()
     stackInput = list()
+    x = 1
     for fs in fselect:
         for c in classifiers:
-            #t = (target_path, X, y, n_seed, splits, c, fs, data.columns)
-            classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
-            #process = mp.Process(target=runC.classify, args=(t))
-            #process.start()
+            if x < mp.cpu_count()/2:
+                t = (target_path, X, y, n_seed, splits, c, fs, data.columns)
+                #classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
+                process = mp.Process(target=runC.classify, args=(t))
+                process.start()
+                x+=1
             
 
-    runFs.fselectNew((data, target, 300, fselect, target_path))
-    st.feature_summaryNew(target_path, X.columns, fselect, 300, 0.7)
-    #fselect.append('robust')
+    #runFs.fselectNew((data, target, 100, fselect, target_path))
+    #st.feature_summaryNew(target_path, X.columns, fselect, 100, 0.7)
 
     #pool.dae
     #pool.map(runC.classify, classifiersInput)

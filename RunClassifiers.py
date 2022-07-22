@@ -103,7 +103,6 @@ class MyClassifier(BaseEstimator, ClassifierMixin):
     def fit(self, X, y):
         #X,y = SMOTE(random_state=42).fit_resample(X,y)
 
-
         fname = self.path + 'results/features/' +self.method+ 'Final.txt'
         with open(fname, 'r') as f:
             index = np.array([float(field) for field in f.read().split()]).astype(int)
@@ -118,7 +117,7 @@ class MyClassifier(BaseEstimator, ClassifierMixin):
 
     def score(self, X, y, sample_weight=None):
         yp = self.predict(X)
-        f1 = f1_score(y, yp, sample_weight=sample_weight)
+        f1 = f1_score(y, yp, sample_weight=sample_weight, zero_division=0)
         acc = accuracy_score(y, yp, sample_weight=sample_weight)
         balanced = balanced_accuracy_score(y, yp)
         conf = confusion_matrix(y, yp)
@@ -126,7 +125,6 @@ class MyClassifier(BaseEstimator, ClassifierMixin):
         tempList = list()
         for par in self.hyperParam:
             tempList.append(getattr(self,par))
-
         file = open(self.path+'results/hyperParamsRuns/'+self.estimator+'_'+self.method+'_run_'+str(self.run)+'.txt', 'a')    
         file.write(str(tempList)+':'+str(conf[0][0])+' '+str(conf[0][1])+' '+str(conf[1][0])+' '+str(conf[1][1])+'\n')
         file.close()
@@ -152,32 +150,31 @@ def getParameters(estimator):
     if estimator =='rdforest':
         return {'n_estimators': Integer(200,2000), 'max_depth': Integer(5,100),
         'min_samples_split':Integer(2,10), 'min_samples_leaf':Integer(1,5),
-        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 40
+        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 60
     elif estimator == 'logreg':
-        return {'penalty': ['none'], 'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 20
+        return {'penalty': ['none'], 'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 30
     elif estimator == 'elasticnet':
         return {'alpha': Real(1e-5, 100, prior = 'log-uniform'),
         'l1_ratio': Real(0.01, 0.99, prior = 'log-uniform'),
-        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 20
+        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 30
     elif estimator == 'naiveBayes':
         return {'alpha': [1]}, 1
     elif estimator == 'knn':
-        return {'n_neighbors': Integer(2,10), 'leaf_size': Integer(10,100)}, 20
+        return {'n_neighbors': Integer(2,10), 'leaf_size': Integer(10,100)}, 30
     elif estimator == 'LDA':
-        return {'shrinkage' : Real(0.01, 0.99, prior = 'log-uniform'), 'solver': ['lsqr']}, 20
+        return {'shrinkage' : Real(0.01, 0.99, prior = 'log-uniform'), 'solver': ['lsqr']}, 30
     elif estimator == 'svm':
         return {'degree': Real(2, 10), 'gamma':  Real(1e-3, 1e3, prior = 'log-uniform'),
         'C': Real(1e-3, 1e3, prior = 'log-uniform'), 'kernel': ['linear', 'rbf', 'poly'],
-        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 40
+        'class_weight': Real(0.01, 0.99, prior = 'log-uniform')}, 60
     elif estimator == 'xgboost':
         return {'eta':Real(0.005, 0.5, prior = 'log-uniform'), 'max_depth': Integer(3,15),
         'subsample' : Real(0.01, 0.99, prior = 'log-uniform'), 'scale_pos_weight' : Integer(1,100),
         'colsample_bytree' : Real(0.01, 0.99, prior = 'log-uniform'), 
-        'n_estimators':Integer(50, 500),  'min_child_weight' : Integer(5,10)}, 60
+        'n_estimators':Integer(50, 500),  'min_child_weight' : Integer(5,10)}, 80
 	
 
 def classify(target_path, X, y, n_seed, splits, c, fs, columns):
-    print('test')
     # = myTuple
     cpath = target_path+'results/classifiers/'
     fPath = target_path+'results/features/'
@@ -198,7 +195,7 @@ def classify(target_path, X, y, n_seed, splits, c, fs, columns):
         parms, itr = getParameters(c)
         parms = {'myclassifier__' + key: parms[key] for key in parms}
 
-        grid_imba = BayesSearchCV(_pipeline, search_spaces=parms, cv=cv, n_iter=itr, refit = False, n_jobs=-1, n_points=5)
+        grid_imba = BayesSearchCV(_pipeline, search_spaces=parms, cv=cv, n_iter=itr, refit = False, n_jobs=-1, n_points=3)
         grid_imba.fit(X_train.values, y_train.values)
         best = grid_imba.best_params_
 
