@@ -1,0 +1,36 @@
+----------------------------------------------------------------------------------------
+
+Results for one way ANOVA between sex and GAD7 are: 
+
+              df      sum_sq   mean_sq          F        PR(>F)
+C(sex)       1.0    2.156346  2.156346  84.832244  4.144456e-20
+Residual  7497.0  190.565797  0.025419        NaN           NaN
+----------------------------------------------------------------------------------------
+
+Results for follow-up Tukey test between sex and GAD7 are: 
+
+   group1  group2      Diff     Lower     Upper    q-value  p-value
+0     0.0     1.0  0.034185  0.026909  0.041461  13.025532    0.001
+----------------------------------------------------------------------------------------
+
+Results for Shapiro-Wilk test to check for normality are: 
+
+w is: 0.7163835167884827/ p-value is: 0.0
+----------------------------------------------------------------------------------------
+
+Results for Levene's test to check for equality of variance are: 
+
+              Parameter   Value
+    Test statistics (W) 84.4869
+Degrees of freedom (Df)  1.0000
+                p value  0.0000
+----------------------------------------------------------------------------------------
+
+Results for the Kruskal-Wallis Test -- to be used if ANOVA assumptions are violated: 
+
+statistic: 111.14227821774209/ p-value is: 5.507290911353809e-26
+----------------------------------------------------------------------------------------
+
+The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test
+----------------------------------------------------------------------------------------
+

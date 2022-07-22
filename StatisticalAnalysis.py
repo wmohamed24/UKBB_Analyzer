@@ -290,9 +290,8 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
     #Check for Multicolinearity
     if VIF and len(continuous) > 1:
         vif_data = pd.DataFrame()
-        if not VIF_values:
-            VIF_values = continuous
-        elif VIF_values == 'all' or VIF_values == ['all']:
+        VIF_values = continuous
+        if VIF_values == 'all' or VIF_values == ['all']:
             VIF_values = indep
 
         vif_data["feature"] = VIF_values
@@ -534,9 +533,8 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
     
     if VIF and len(continuous) > 1:
         vif_data = pd.DataFrame()
-        if not VIF_values:
-            VIF_values = continuous
-        elif VIF_values == 'all' or VIF_values == ['all']:
+        VIF_values = continuous
+        if VIF_values == 'all' or VIF_values == ['all']:
             VIF_values = indep
 
         vif_data["feature"] = VIF_values
@@ -812,16 +810,19 @@ def oneWay_ANOVA(data, dep, indep, alpha, between, followUp, path):
 
     
     #The dunn's test -- follow up
-    if (Kruskal[1] > alpha) and (not followUp):
+    if (Kruskal[1] > alpha) and (not followUp) or True:
         oneWayANOVA.write('The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
     else:
         FSA = importr('FSA')
-        dunnTest, formulaMaker = r['dunnTest'], r['as.formula']
+        dunnTest, formulaMaker, names = r['dunnTest'], r['as.formula'], r['names']
 
         with localconverter(ro.default_converter + pandas2ri.converter):
             rDf = ro.conversion.py2rpy(data)
 
         formula = formulaMaker(dep + ' ~ ' + indep)
+        print(names(rDf))
+        print(formula)
+        print(rDf)
         dunnTwoWay = dunnTest(formula, data=rDf, method="bonferroni")
 
         asData, doCall, rbind = r['as.data.frame'], r['do.call'], r['rbind']

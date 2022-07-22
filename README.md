@@ -2,16 +2,16 @@
 A package used to run Machine Learning as well as Statical Analysis on UK_BioBank data
 
 
-## Association Rule Learning:
+## Association Rule Learning: (done)
   - Input must be only one hot encoded and outcome variables has to be categorized
   - can't include continuous variables
 
-## Mediation Analysis:
+## Mediation Analysis: (undone)
   - (Not 100% sure) Outcome preferably continuous
   - mediator can be either continuous or categorical (doesn't need to be one hot encoded)
   - independent can be either continuous or categorical (doesn't need to be one hot encoded)
 
-## Mendelian Randomization
+## Mendelian Randomization (undone)
   - Don't remember honestly but I think continuous and categorical non-one-hot-encoded variables are fine
 
 ## Multivariate Regression

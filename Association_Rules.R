@@ -2,6 +2,8 @@
 #install.packages("arules", repos='http://cran.us.r-project.org')
 #install.packages("arulesViz", repos='http://cran.us.r-project.org')
 #install.packages("RColorBrewer", repos='http://cran.us.r-project.org')
+#install.packages("DescTools")
+#install.packages("FSA")
 
 
 library(arules)

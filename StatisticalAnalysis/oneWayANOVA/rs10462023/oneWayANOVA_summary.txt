@@ -1,0 +1,33 @@
+----------------------------------------------------------------------------------------
+
+Results for one way ANOVA between rs10462023 and GAD7 are: 
+
+                   df      sum_sq   mean_sq         F    PR(>F)
+C(rs10462023)     2.0    0.060752  0.030376  1.181851  0.306767
+Residual       7496.0  192.661392  0.025702       NaN       NaN
+----------------------------------------------------------------------------------------
+
+The p-value is lower than alpha; hence, no follow-up test was conducted
+----------------------------------------------------------------------------------------
+
+Results for Shapiro-Wilk test to check for normality are: 
+
+w is: 0.6887027025222778/ p-value is: 0.0
+----------------------------------------------------------------------------------------
+
+Results for Levene's test to check for equality of variance are: 
+
+              Parameter  Value
+    Test statistics (W) 1.1647
+Degrees of freedom (Df) 2.0000
+                p value 0.3121
+----------------------------------------------------------------------------------------
+
+Results for the Kruskal-Wallis Test -- to be used if ANOVA assumptions are violated: 
+
+statistic: 1.6277545399059505/ p-value is: 0.4431365709170826
+----------------------------------------------------------------------------------------
+
+The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test
+----------------------------------------------------------------------------------------
+

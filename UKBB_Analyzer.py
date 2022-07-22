@@ -36,13 +36,13 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "sendToWaelOHC" #name of the data file in the data folder
-    target = "GAD7_1" #name of the binarized dependent variable 
+    datafile = "sendToWaelnonOHCnonBin" #name of the data file in the data folder
+    target = "GAD7" #name of the binarized dependent variable 
 
 
     #Specify which data file type youa are using
     
-    data = pd.read_csv(directory_path+"data/"+datafile+".csv", index_col=0)
+    data = pd.read_csv(directory_path+"Data/"+datafile+".csv", index_col=0)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ def main():
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, ensemble=True)
+    #runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, ensemble=True)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -85,15 +85,17 @@ def main():
     if target in continuous:
         continuous.remove(target)
 
+
     #data.drop(continuous, axis = 1, inplace=True)
     #print(data.columns)
     #vars = data.columns.tolist()
     #vars.remove('GAD7')
-    #StatisticalAnalysis.Association_Analysis(data = data, path = statsPath, vars = vars, oneTarget=True, target='GAD7')
+    #StatisticalAnalysis.Association_Analysis(data = data, path = statsPath, vars = vars, oneTarget=True, target='GAD7_1')
 
-    #for var in data.columns:
-    #    if not var == 'sex' and not var == 'GAD7':
-    #StatisticalAnalysis.ANOVA(data = data, path = statsPath, dep = target, indep=['sex'], oneWay=True)
+    for var in data.columns:
+        if var != 'sex' and var != 'GAD7':
+            print(var)
+            StatisticalAnalysis.ANOVA(data = data, path = statsPath, dep = target, indep=['sex'], oneWay=True)
     #Uncomment the staistical test desired and pass the suitable parameters
 
     #MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
