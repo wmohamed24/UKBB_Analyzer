@@ -291,8 +291,6 @@ def Multivariate_Reg(data, path, target, continuous, categorical, correct = Fals
     if VIF and len(continuous) > 1:
         vif_data = pd.DataFrame()
         VIF_values = continuous
-        if VIF_values == 'all' or VIF_values == ['all']:
-            VIF_values = indep
 
         vif_data["feature"] = VIF_values
         vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
@@ -534,8 +532,6 @@ def Odds_Ratios(data, path, target, continuous, categorical = list(), correct = 
     if VIF and len(continuous) > 1:
         vif_data = pd.DataFrame()
         VIF_values = continuous
-        if VIF_values == 'all' or VIF_values == ['all']:
-            VIF_values = indep
 
         vif_data["feature"] = VIF_values
         vif_data["VIF"] = [variance_inflation_factor(data[VIF_values].values, i)
