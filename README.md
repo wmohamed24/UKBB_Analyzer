@@ -2,7 +2,7 @@
 A package used to run Machine Learning as well as Statical Analysis on UK_BioBank data
 
 
-# Association Rule Learning:
+## Association Rule Learning:
   - Input must be only one hot encoded and outcome variables has to be categorized
   - can't include continuous variables
 
