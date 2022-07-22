@@ -24,7 +24,7 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - continuous variables are okay
   - outcome variable has to be binary or categorical
 
-#ANOVA
+# ANOVA
   - indep variables have to be categorical (preferably not one hot encoded)
   - outcome variable has to be continuous
 
