@@ -80,13 +80,10 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     
     ## run classification on personal computer
     elif doC:
-        pool = mp.Pool(int(mp.cpu_count()))
         classifiersInput = list()
         for fs in fselect:
             for c in classifiers:
-                classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
-            pool.map(runC.classify, classifiersInput)
-            pool.close()
+                runC.classify((target_path, X, y, n_seed, splits, c, fs, data.columns))
 
     ## create hearmaps for classification
     if doC:
