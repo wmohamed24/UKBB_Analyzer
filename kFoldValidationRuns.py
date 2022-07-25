@@ -48,6 +48,7 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     if not os.path.exists(classifiersPath):
         os.makedirs(classifiersPath)
 
+    ## calculate baseline values for accuracy and f1-score
     f = open(STATS_path+'Baseline.txt','w+')
     rate = sum(data[target])/data.shape[0]
     f.write('base line accuracy is '+str( max(rate,1-rate))+'\n')
@@ -55,15 +56,18 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     f.write('base line f1 value is '+str(f1))
     f.close()
 
+    ## break data into predictive variables and outcome variable
     data = data.copy(deep = True)
     X = data.drop(target, axis = 1)
     y = data[target]
 
+    ## run feature selection
     if doF:
         runFs.fselectNew((data, target, fselectRepeat, fselect, target_path))
         st.feature_summaryNew(target_path, X.columns, fselect, fselectRepeat, cutoff, robustFeatures)
     fselect.append('robust')
     
+    ## run classification on the cluster
     if doC and cluster:
         x = 1
         for fs in fselect:
@@ -74,6 +78,7 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
                     process.start()
                     x+=1
     
+    ## run classification on personal computer
     elif doC:
         pool = mp.Pool(int(mp.cpu_count()))
         classifiersInput = list()
@@ -83,6 +88,7 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
             pool.map(runC.classify, classifiersInput)
             pool.close()
 
+    ## create hearmaps for classification
     if doC:
         st.create_STATS(target_path)
         st.heatmap(target_path, target, True)
