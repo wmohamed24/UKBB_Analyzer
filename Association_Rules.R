@@ -22,11 +22,11 @@ data <- data[,!names(data) %in% c("X")]
 data <- data.frame(lapply(data, as.logical))
 
 
-sup <- 0.005 #as.numeric(args[2])
-con <- 0.05 #as.numeric(args[3])
-max <- 5 #as.numeric(args[4])
-min <- 2 #as.numeric(args[5])
-varOfInterest <- 'GAD7_1' #args[6]
+sup <- as.numeric(args[2])
+con <- as.numeric(args[3])
+max <- as.numeric(args[4])
+min <- as.numeric(args[5])
+varOfInterest <- args[6]
 
 
 if (varOfInterest != 'none'){

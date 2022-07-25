@@ -22,21 +22,17 @@ var = args[3]
 data = read.csv(fname)
 data = data[,!names(data) %in% c("X")]
 
+formula = as.formula(var + '~.')
 if (regType == 'linear'){
-  full.model <- lm(GAD7 ~., data = data)
+  full.model <- lm(formula, data = data)
   step.model <- stepAIC(full.model, direction = "both", 
                         trace = FALSE)
-  #b <- regsubsets(GAD7 ~ ., data=data, nbest=1, nvmax=30, really.big=T)
-  #print(summary(b))
 
   
 } else if (regType == 'logit') {
-  full.model <- glm(GAD7_1 ~ ., data = data, family = "binomial")
-  #step.model <- stepAIC(full.model, direction = "both", 
-  #                     trace = FALSE)
+  full.model <- glm(formula, data = data, family = "binomial")
   step.model <- stepAIC(full.model, direction = "both", 
                         trace = FALSE)
-  #step.model <- stepwise(full.model, direction="forward/backward", criterion = "AIC")
 }
 
 
