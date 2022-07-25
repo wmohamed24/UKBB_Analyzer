@@ -7,7 +7,8 @@ from imblearn.over_sampling import SMOTE
 import RunFeatureSelection as runFs
 
 
-def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, unlabData = None, ensemble = False):
+def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, 
+doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     
     '''
     Create all the directories to store all the intermediate and final results. 
@@ -54,35 +55,33 @@ def NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_se
     X = data.drop(target, axis = 1)
     y = data[target]
 
-    mp.set_start_method('fork')
+    if doF:
+        runFs.fselectNew((data, target, fselectRepeat, fselect, target_path))
+        st.feature_summaryNew(target_path, X.columns, fselect, fselectRepeat, cutoff, robustFeatures)
     fselect.append('robust')
     
-    classifiersInput = list()
-    stackInput = list()
-    #x = 1
-    #for fs in fselect:
-        #for c in classifiers:
-            #if x < mp.cpu_count()/2:
-                #t = (target_path, X, y, n_seed, splits, c, fs, data.columns)
-                #classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
-                #process = mp.Process(target=runC.classify, args=(t))
-                #process.start()
-                #x+=1
-            
-
-    runFs.fselectNew((data, target, 100, fselect, target_path))
-    st.feature_summaryNew(target_path, X.columns, fselect, 100, 0.7)
-
-    #pool.dae
-    #pool.map(runC.classify, classifiersInput)
-    #pool.close()
-
-    #for i in classifiersInput:
-    #   runC.classify(i)
-    #rsr.Stack((target_path, classifiers, fselect, X, y, n_seed, splits))
+    if doC and cluster:
+        x = 1
+        for fs in fselect:
+            for c in classifiers:
+                if x < mp.cpu_count():
+                    arg = (target_path, X, y, n_seed, splits, c, fs, data.columns)
+                    process = mp.Process(target=runC.classify, kwargs = {'myTuple':arg})
+                    process.start()
+                    x+=1
     
-    #st.create_STATS(target_path)
-    #st.heatmap(target_path, target, True)
-    #st.heatmap(target_path, target, False)
+    elif doC:
+        pool = mp.Pool(int(mp.cpu_count()))
+        classifiersInput = list()
+        for fs in fselect:
+            for c in classifiers:
+                classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
+            pool.map(runC.classify, classifiersInput)
+            pool.close()
+
+    if doC:
+        st.create_STATS(target_path)
+        st.heatmap(target_path, target, True)
+        st.heatmap(target_path, target, False)
     
     

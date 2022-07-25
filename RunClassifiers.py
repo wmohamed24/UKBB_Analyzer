@@ -174,8 +174,8 @@ def getParameters(estimator):
         'n_estimators':Integer(50, 500),  'min_child_weight' : Integer(5,10)}, 80
 	
 
-def classify(target_path, X, y, n_seed, splits, c, fs, columns):
-    # = myTuple
+def classify(myTuple):
+    target_path, X, y, n_seed, splits, c, fs, columns = myTuple
     cpath = target_path+'results/classifiers/'
     fPath = target_path+'results/features/'
     rPath = target_path+'results/hyperParamsRuns/'

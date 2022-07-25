@@ -44,7 +44,7 @@ def shaplyValue(model, X, y, path):
         plt.close()
 
 
-def feature_summaryNew(path, features, fselect, n_itr, cutoff):
+def feature_summaryNew(path, features, fselect, n_itr, cutoff, robustFeatures):
     if not os.path.exists(path+'/STATS/featureSelection/'):
         os.makedirs(path+'/STATS/featureSelection/')
 
@@ -60,6 +60,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
 
     os.chdir(path+'results/featureSelection')
     for fs in fselect:
+        f_summaryFinal[fs] = pd.to_numeric(f_summaryFinal[fs])
         open(path+'results/features/'+fs+'Final.txt', 'w').close()
         runs = list(range(1, n_itr+1))
         runs = ['run_'+str(x) for x in runs]
@@ -67,12 +68,13 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
         for f in features:
             f_summary.loc[len(f_summary.index)] = [f]+[0 for x in range(len(runs))]
         for run in runs:
+            f_summary[run] = pd.to_numeric(f_summary[run])
             file = fs+'_strap_'+str(run.split('_')[1])+'.txt'
             with open(file, 'r') as fileRead:
-                index = np.array([float(field) for field in fileRead.read().split()]).astype(int)
+                index = np.array([int(field) for field in fileRead.read().split() if field!='None']).astype(int)
             for i in index:
-                f_summary.at[i,run] += 1
-            
+                f_summary.at[i,run] = 1
+                    
         f_summary['TOTAL'] = f_summary.sum(axis=1, numeric_only=True)
         for x in range(len(f_summary)):
             f_summaryFinal.at[x, fs] = f_summary.at[x, 'TOTAL']
@@ -99,7 +101,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
     f_summaryFinal.to_csv(path+'/STATS/featureSelection/robust.csv',index=True)
 
     outcomeIndex = list()
-    for x in range(int(25)):
+    for x in range(robustFeatures):
         outcomeIndex.append(f_summary.at[x, 'index'])
     
     toWrite = open(path+'results/features/robustFinal.txt', 'a')
@@ -117,7 +119,6 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff):
 def create_STATS(path):
     '''
     Gather the max accuracies and percisions of all the classifers and feature selection methods and save them in a csv file.
-
     Args:
         path: Directory from which the python file is being run
     '''
@@ -203,7 +204,6 @@ def create_STATS(path):
 def heatmap(path, title, trainValid):
     '''
     Create heatmaps for the accuracies and percision scores of all the classifers and feature selection methods.
-
     Args:
         path: Directory from which the python file is being run
         title: the dependent variable of the dataset
