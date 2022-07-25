@@ -22,11 +22,15 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
         target: the dependent variable of the dataset
         classifiers: Classification methods used
         fselect: Feature selection methods used
-        type: Type of analysis performed
         n_seed: Number of validations
         splits: Number of folds or splits in each validation run  
-        continuous: list of the names of continuous variables
-        columns_org: names of columns before dummification 
+        doC: boolean indicating whether to run Classification
+        doF: boolean indicating whether to run featureSelection 
+        cluster: set to True if classification will be run on a cluster
+        fselectRepeat: num. of repeations in feature selection bootstrapping
+        cutoff: cutoff for selecting features from different methods
+        robustFeatures: num. of features to be selected as robust
+
     '''
     
     target_path = directory_path+'NormalDataAnalysis/'+datafile+"_"+target+"/"
