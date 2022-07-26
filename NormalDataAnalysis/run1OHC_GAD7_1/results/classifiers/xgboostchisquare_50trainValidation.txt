@@ -1,0 +1,20 @@
+OrderedDict([('myclassifier__colsample_bytree', 0.99), ('myclassifier__eta', 0.03291384791148808), ('myclassifier__max_depth', 5), ('myclassifier__min_child_weight', 5), ('myclassifier__n_estimators', 151), ('myclassifier__scale_pos_weight', 12), ('myclassifier__subsample', 0.99)])
+41178  9964
+ 2044  1343
+
+OrderedDict([('myclassifier__colsample_bytree', 0.3843327026991234), ('myclassifier__eta', 0.005), ('myclassifier__max_depth', 8), ('myclassifier__min_child_weight', 10), ('myclassifier__n_estimators', 401), ('myclassifier__scale_pos_weight', 14), ('myclassifier__subsample', 0.07098150094565411)])
+42843  8302
+ 2215  1169
+
+OrderedDict([('myclassifier__colsample_bytree', 0.8184955598248608), ('myclassifier__eta', 0.005), ('myclassifier__max_depth', 4), ('myclassifier__min_child_weight', 7), ('myclassifier__n_estimators', 155), ('myclassifier__scale_pos_weight', 12), ('myclassifier__subsample', 0.08037877927053783)])
+43612  7519
+ 2286  1112
+
+OrderedDict([('myclassifier__colsample_bytree', 0.8408000846305846), ('myclassifier__eta', 0.007604746092539422), ('myclassifier__max_depth', 8), ('myclassifier__min_child_weight', 10), ('myclassifier__n_estimators', 329), ('myclassifier__scale_pos_weight', 18), ('myclassifier__subsample', 0.018450804557581538)])
+44039  7075
+ 2374  1041
+
+OrderedDict([('myclassifier__colsample_bytree', 0.99), ('myclassifier__eta', 0.005), ('myclassifier__max_depth', 10), ('myclassifier__min_child_weight', 5), ('myclassifier__n_estimators', 500), ('myclassifier__scale_pos_weight', 22), ('myclassifier__subsample', 0.03154667221582027)])
+45085  6010
+ 2521   913
+

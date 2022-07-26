@@ -4,7 +4,8 @@ import os
 import kFoldValidationRuns as runs
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import resample
-import StatisticalAnalysis
+#import StatisticalAnalysis
+import multiprocessing as mp
 
 
 
@@ -24,6 +25,34 @@ def distill(features):
             new_features.append(new_feature)
     return new_features
 
+def distillTotal(dir,features_target,features):
+    file=open('NormalDataAnalysis/'+dir+'/results/features/robustFinal.txt','r')
+    line=[int(i) for i in file.readline().split() if i!='None']
+    index=np.where(features==features_target)[0][0]
+    line=np.array([i+1 if i>=index else i for i in line])
+    print(index)
+    print(line)
+    line=features[line]
+    line=np.append(line,features_target)
+    print(len(line))
+    print(line)
+    new_features=distill(line)
+    print(len(new_features))
+    print(np.array(new_features))
+    return np.array(new_features)
+    
+    
+def importantFeatures(dir,data,target):
+    file=open('NormalDataAnalysis/'+dir+'/results/features/robustFinal.txt','r')
+    line=[int(i) for i in file.readline().split() if i!='None']
+    index=np.where(data.columns==target)[0][0]
+    line=np.array([i+1 if i>=index else i for i in line])
+    to_drop=np.array(data.columns[np.setdiff1d(np.array([i for i in range(len(data.columns))]),line)])
+    #to_drop=np.array(data.columns[np.setdiff1d(np.array([i for i in range(len(data.columns))]),line)])
+    print(np.setdiff1d(data.columns,to_drop))
+    to_drop=np.delete(to_drop,np.where(np.array(to_drop)==target)[0])
+    data.drop(labels=to_drop,axis=1,inplace=True)
+
 def main():
 
     #----------------------------------------------------------------------------------------
@@ -36,8 +65,8 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "sendToWaelnonOHCnonBin" #name of the data file in the data folder
-    target = "GAD7" #name of the binarized dependent variable 
+    datafile = "run1OHC" #name of the data file in the data folder
+    target = "GAD7_1" #name of the binarized dependent variable 
 
 
     #Specify which data file type youa are using
@@ -48,26 +77,32 @@ def main():
     #----------------------------------------------------------------------------------------
     # 
     # #Classification
+    mp.set_start_method('fork')
     #Keep the classification and feature selection methods that you want
     classifiers=['xgboost', 'LDA', 'rdforest', 'logreg']#, 'svm']
     #replace the # with the number of features you want
-    fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50', 'fisher_50', 'fcbf', 'cfs'] 
+    fselect=['AllFeatures', 'infogain_50', 'reliefF_50', 'jmi_50', 'mrmr_50', 'chisquare_50']     #, 'fisher_50', 'fcbf', 'cfs'] 
     #fselect = ['AllFeatures', 'mrmr_50', 'chisquare_50']
     #Note that cfs and fcbf find all the significant features so they don't need a number
 
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    #runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, ensemble=True)
+    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=False,doF=False,cluster=False,fselectRepeat=100,cutoff=0.7,robustFeatures=25)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
-
-    #Statistical Analysis
     '''
-    cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
-    'rs10462020_2.rs17031614_2', 'rs228697_2.rs10462020_2', 'rs228697_2.rs10462020_1', 'rs228697_1.rs10462020_2', 'GAD7_1']
-
+    #Statistical Analysis
+    
+    #cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
+    #'rs10462020_2.rs17031614_2', 'rs228697_2.rs10462020_2', 'rs228697_2.rs10462020_1', 'rs228697_1.rs10462020_2', 'GAD7_1']
+    
+    features_datafile='run1OHC'
+    features = np.array(pd.read_csv(directory_path+"Data/"+features_datafile+".csv", index_col=0).columns)
+    distillTotal('run1OHC_GAD7_1','GAD7_1',features)
+  
+    
     #cols = distill(cols)
 
     data = data[cols]
@@ -93,14 +128,16 @@ def main():
     #vars = data.columns.tolist()
     #vars.remove('GAD7')
     #StatisticalAnalysis.Association_Analysis(data = data, path = statsPath, vars = vars, oneTarget=True, target='GAD7_1')
-
+    
     for var in data.columns:
         if var != 'sex' and var != 'GAD7':
             print(var)
             StatisticalAnalysis.ANOVA(data = data, path = statsPath, dep = target, indep=['sex'], oneWay=True)
+    
+    
     #Uncomment the staistical test desired and pass the suitable parameters
 
-    MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
+    #MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
     #oddsRatios = StatisticalAnalysis.Odds_Ratios(data = data, path = statsPath, target=target, continuous=continuous, stepwise=True, categorical=categorical)
     #assAnalyis = StatisticalAnalysis.Association_Analysis(data = data, path = directory_path, vars = data.drop([targetBinary]+continuous, axis = 1))
     #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = statsPath, rhs = 'GAD7_1')

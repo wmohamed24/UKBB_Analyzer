@@ -1,0 +1,20 @@
+OrderedDict([('myclassifier__class_weight', 0.0702157902886876), ('myclassifier__max_depth', 5), ('myclassifier__min_samples_leaf', 5), ('myclassifier__min_samples_split', 10), ('myclassifier__n_estimators', 2000)])
+5277  371
+ 345   66
+
+OrderedDict([('myclassifier__class_weight', 0.06748755415726426), ('myclassifier__max_depth', 5), ('myclassifier__min_samples_leaf', 3), ('myclassifier__min_samples_split', 2), ('myclassifier__n_estimators', 2000)])
+4965  680
+ 330   84
+
+OrderedDict([('myclassifier__class_weight', 0.06444043295768252), ('myclassifier__max_depth', 5), ('myclassifier__min_samples_leaf', 3), ('myclassifier__min_samples_split', 2), ('myclassifier__n_estimators', 200)])
+4882  777
+ 286  114
+
+OrderedDict([('myclassifier__class_weight', 0.06754836038999074), ('myclassifier__max_depth', 5), ('myclassifier__min_samples_leaf', 5), ('myclassifier__min_samples_split', 2), ('myclassifier__n_estimators', 2000)])
+4976  700
+ 295   88
+
+OrderedDict([('myclassifier__class_weight', 0.07279018775337745), ('myclassifier__max_depth', 100), ('myclassifier__min_samples_leaf', 5), ('myclassifier__min_samples_split', 10), ('myclassifier__n_estimators', 2000)])
+5060  635
+ 277   87
+

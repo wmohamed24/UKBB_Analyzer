@@ -59,6 +59,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff, robustFeatures):
 
 
     os.chdir(path+'results/featureSelection')
+    open(path+'results/features/robustFinal.txt', 'w').close()
     for fs in fselect:
         f_summaryFinal[fs] = pd.to_numeric(f_summaryFinal[fs])
         open(path+'results/features/'+fs+'Final.txt', 'w').close()
@@ -102,7 +103,7 @@ def feature_summaryNew(path, features, fselect, n_itr, cutoff, robustFeatures):
 
     outcomeIndex = list()
     for x in range(robustFeatures):
-        outcomeIndex.append(f_summary.at[x, 'index'])
+        outcomeIndex.append(f_summaryFinal.at[x, 'index'])
     
     toWrite = open(path+'results/features/robustFinal.txt', 'a')
     for x in outcomeIndex:
