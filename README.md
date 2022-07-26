@@ -94,6 +94,23 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - All the functions in the class are either writing already exisiting functions of the classifiers to do the same 
     job but with some modification to fit the code -- detailed description of each of the functions is included in the code
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Association Rule Learning: (undone)
   - Input must be only one hot encoded and outcome variables has to be categorized
   - can't include continuous variables

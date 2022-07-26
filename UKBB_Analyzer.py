@@ -4,7 +4,7 @@ import os
 import kFoldValidationRuns as runs
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import resample
-#import StatisticalAnalysis
+from StatisticalAnalysis import StatisticalAnalysis
 import multiprocessing as mp
 
 
@@ -30,15 +30,15 @@ def distillTotal(dir,features_target,features):
     line=[int(i) for i in file.readline().split() if i!='None']
     index=np.where(features==features_target)[0][0]
     line=np.array([i+1 if i>=index else i for i in line])
-    print(index)
-    print(line)
+    #print(index)
+    #print(line)
     line=features[line]
     line=np.append(line,features_target)
-    print(len(line))
-    print(line)
+    #print(len(line))
+    #print(line)
     new_features=distill(line)
-    print(len(new_features))
-    print(np.array(new_features))
+    #print(len(new_features))
+    #print(np.array(new_features))
     return np.array(new_features)
     
     
@@ -47,11 +47,13 @@ def importantFeatures(dir,data,target):
     line=[int(i) for i in file.readline().split() if i!='None']
     index=np.where(data.columns==target)[0][0]
     line=np.array([i+1 if i>=index else i for i in line])
-    to_drop=np.array(data.columns[np.setdiff1d(np.array([i for i in range(len(data.columns))]),line)])
+    line=np.array(data.columns[line])
+    line=np.append(line,target)
+    return line
     #to_drop=np.array(data.columns[np.setdiff1d(np.array([i for i in range(len(data.columns))]),line)])
-    print(np.setdiff1d(data.columns,to_drop))
-    to_drop=np.delete(to_drop,np.where(np.array(to_drop)==target)[0])
-    data.drop(labels=to_drop,axis=1,inplace=True)
+    #print(np.setdiff1d(data.columns,to_drop))
+    #to_drop=np.delete(to_drop,np.where(np.array(to_drop)==target)[0])
+    #data.drop(labels=to_drop,axis=1,inplace=True)
 
 def main():
 
@@ -92,7 +94,7 @@ def main():
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
-    '''
+    
     #Statistical Analysis
     
     #cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
@@ -100,12 +102,12 @@ def main():
     
     features_datafile='run1OHC'
     features = np.array(pd.read_csv(directory_path+"Data/"+features_datafile+".csv", index_col=0).columns)
-    distillTotal('run1OHC_GAD7_1','GAD7_1',features)
-  
+    cols=distillTotal('run1OHC_GAD7_1','GAD7_1',features)
     
-    #cols = distill(cols)
 
     data = data[cols]
+    data.columns = data.columns.str.replace(' ', '_')
+    data.columns = data.columns.str.replace('.', '_')
 
     for col in cols:
         print(data[col].value_counts())
@@ -128,20 +130,24 @@ def main():
     #vars = data.columns.tolist()
     #vars.remove('GAD7')
     #StatisticalAnalysis.Association_Analysis(data = data, path = statsPath, vars = vars, oneTarget=True, target='GAD7_1')
+
     
+    #Uncomment the staistical test desired and pass the suitable parameters
+    sa=StatisticalAnalysis(directory_path,statsPath)
+
+    '''
     for var in data.columns:
         if var != 'sex' and var != 'GAD7':
             print(var)
             StatisticalAnalysis.ANOVA(data = data, path = statsPath, dep = target, indep=['sex'], oneWay=True)
-    
-    
-    #Uncomment the staistical test desired and pass the suitable parameters
-
-    #MultiReg = StatisticalAnalysis.Multivariate_Reg(data = data, path = statsPath, target=target, continuous = continuous, stepwise = True, categorical = categorical)
-    #oddsRatios = StatisticalAnalysis.Odds_Ratios(data = data, path = statsPath, target=target, continuous=continuous, stepwise=True, categorical=categorical)
-    #assAnalyis = StatisticalAnalysis.Association_Analysis(data = data, path = directory_path, vars = data.drop([targetBinary]+continuous, axis = 1))
-    #assRuleLearning = StatisticalAnalysis.Association_Rule_Learning(data=data, path = statsPath, rhs = 'GAD7_1')
-    #StatisticalAnalysis.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
-    #StatisticalAnalysis.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
     '''
+
+    
+    MultiReg = sa.Multivariate_Reg(data = data, target=target, continuous = continuous, stepwise = True, categorical = categorical)
+    #oddsRatios = sa.Odds_Ratios(data = data, target=target, continuous=continuous, stepwise=True, categorical=categorical)
+    #assAnalyis = sa.Association_Analysis(data = data, vars = data.drop([targetBinary]+continuous, axis = 1))
+    #assRuleLearning = sa.Association_Rule_Learning(data=data, rhs = 'GAD7_1')
+    #sa.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
+    #sa.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
+    
 main()
