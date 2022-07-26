@@ -72,12 +72,11 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
         x = 1
         for fs in fselect:
             for c in classifiers:
-                if x < mp.cpu_count():
                     arg = (target_path, X, y, n_seed, splits, c, fs, data.columns)
                     process = mp.Process(target=runC.classify, kwargs = {'myTuple':arg})
                     process.start()
-                    x+=1
-    
+
+   
     ## run classification on personal computer
     elif doC:
         classifiersInput = list()
@@ -86,9 +85,9 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
                 runC.classify((target_path, X, y, n_seed, splits, c, fs, data.columns))
 
     ## create hearmaps for classification
-    if doC:
-        st.create_STATS(target_path)
-        st.heatmap(target_path, target, True)
-        st.heatmap(target_path, target, False)
+    #if doC:
+    st.create_STATS(target_path)
+    st.heatmap(target_path, target, True)
+    st.heatmap(target_path, target, False)
     
     

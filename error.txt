@@ -1,0 +1,286 @@
+/var/spool/pbs/mom_priv/jobs/25027.turing.SC: line 8: /home/cventresca/anaconda3/envs/myenv: No such file or directory
+Process Process-2:
+Process Process-3:
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 183, in classify
+    os.makedirs(rPath)
+  File "/home/cventresca/anaconda3/lib/python3.9/os.py", line 225, in makedirs
+    mkdir(name, mode)
+FileExistsError: [Errno 17] File exists: '/home/cventresca/UKBB_Analy/NormalDataAnalysis/run1OHC_GAD7_1/results/hyperParamsRuns/'
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 183, in classify
+    os.makedirs(rPath)
+  File "/home/cventresca/anaconda3/lib/python3.9/os.py", line 225, in makedirs
+    mkdir(name, mode)
+FileExistsError: [Errno 17] File exists: '/home/cventresca/UKBB_Analy/NormalDataAnalysis/run1OHC_GAD7_1/results/hyperParamsRuns/'
+Process Process-4:
+joblib.externals.loky.process_executor._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/process_executor.py", line 436, in _process_worker
+    r = call_item()
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/process_executor.py", line 288, in __call__
+    return self.fn(*self.args, **self.kwargs)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/_parallel_backends.py", line 595, in __call__
+    return self.func(*args, **kwargs)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 262, in __call__
+    return [func(*args, **kwargs)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 262, in <listcomp>
+    return [func(*args, **kwargs)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/utils/fixes.py", line 216, in __call__
+    return self.function(*args, **kwargs)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_validation.py", line 680, in _fit_and_score
+    estimator.fit(X_train, y_train, **fit_params)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/imblearn/pipeline.py", line 272, in fit
+    self._final_estimator.fit(Xt, yt, **fit_params_last_step)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/utils/_testing.py", line 313, in wrapper
+    return fn(*args, **kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 111, in fit
+    X = X[:,self.idx]
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 89.9 MiB for an array with shape (240, 49076) and data type float64
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 199, in classify
+    grid_imba.fit(X_train.values, y_train.values)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 466, in fit
+    super().fit(X=X, y=y, groups=groups, **fit_params)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 891, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 512, in _run_search
+    optim_result = self._step(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 408, in _step
+    all_results = evaluate_candidates(params_dict)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 838, in evaluate_candidates
+    out = parallel(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 1056, in __call__
+    self.retrieve()
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 935, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/_parallel_backends.py", line 542, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 439, in result
+    return self.__get_result()
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+numpy.core._exceptions._ArrayMemoryError: Unable to allocate 89.9 MiB for an array with shape (240, 49076) and data type float64
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 1 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+Process Process-23:
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 199, in classify
+    grid_imba.fit(X_train.values, y_train.values)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 466, in fit
+    super().fit(X=X, y=y, groups=groups, **fit_params)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 891, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 512, in _run_search
+    optim_result = self._step(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 408, in _step
+    all_results = evaluate_candidates(params_dict)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 838, in evaluate_candidates
+    out = parallel(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 1056, in __call__
+    self.retrieve()
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 935, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/_parallel_backends.py", line 542, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+The exit codes of the workers are {SIGKILL(-9)}
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 1 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+Process Process-27:
+Traceback (most recent call last):
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/home/cventresca/anaconda3/lib/python3.9/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/cventresca/UKBB_Analy/RunClassifiers.py", line 199, in classify
+    grid_imba.fit(X_train.values, y_train.values)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 466, in fit
+    super().fit(X=X, y=y, groups=groups, **fit_params)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 891, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 512, in _run_search
+    optim_result = self._step(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/skopt/searchcv.py", line 408, in _step
+    all_results = evaluate_candidates(params_dict)
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/sklearn/model_selection/_search.py", line 838, in evaluate_candidates
+    out = parallel(
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 1056, in __call__
+    self.retrieve()
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/parallel.py", line 935, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/_parallel_backends.py", line 542, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 446, in result
+    return self.__get_result()
+  File "/home/cventresca/anaconda3/lib/python3.9/concurrent/futures/_base.py", line 391, in __get_result
+    raise self._exception
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+The exit codes of the workers are {SIGKILL(-9), SIGKILL(-9), SIGKILL(-9), SIGKILL(-9)}
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 1 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+The objective has been evaluated at this point before.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+The objective has been evaluated at this point before.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+The objective has been evaluated at this point before.
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+The objective has been evaluated at this point before.
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+The objective has been evaluated at this point before.
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+The objective has been evaluated at this point before.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+The objective has been evaluated at this point before.
+A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '
+/home/cventresca/anaconda3/lib/python3.9/site-packages/joblib/externals/loky/backend/resource_tracker.py:318: UserWarning: resource_tracker: There appear to be 5 leaked folder objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

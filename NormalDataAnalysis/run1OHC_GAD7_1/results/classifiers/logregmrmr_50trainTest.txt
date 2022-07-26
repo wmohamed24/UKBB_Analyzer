@@ -1,0 +1,20 @@
+OrderedDict([('myclassifier__class_weight', 0.08283335364948421), ('myclassifier__penalty', 'none')])
+5202  446
+ 341   70
+
+OrderedDict([('myclassifier__class_weight', 0.08750132496850653), ('myclassifier__penalty', 'none')])
+5270  375
+ 361   53
+
+OrderedDict([('myclassifier__class_weight', 0.08680553833274027), ('myclassifier__penalty', 'none')])
+5248  411
+ 324   76
+
+OrderedDict([('myclassifier__class_weight', 0.08694116812504325), ('myclassifier__penalty', 'none')])
+5283  393
+ 323   60
+
+OrderedDict([('myclassifier__class_weight', 0.07535576956068876), ('myclassifier__penalty', 'none')])
+5044  651
+ 284   80
+

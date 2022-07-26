@@ -1,0 +1,20 @@
+OrderedDict([('myclassifier__shrinkage', 0.99), ('myclassifier__solver', 'lsqr')])
+5351  297
+ 348   63
+
+OrderedDict([('myclassifier__shrinkage', 0.7605976734767191), ('myclassifier__solver', 'lsqr')])
+5337  308
+ 370   44
+
+OrderedDict([('myclassifier__shrinkage', 0.7573813942975065), ('myclassifier__solver', 'lsqr')])
+5325  334
+ 331   69
+
+OrderedDict([('myclassifier__shrinkage', 0.7081672416449799), ('myclassifier__solver', 'lsqr')])
+5390  286
+ 332   51
+
+OrderedDict([('myclassifier__shrinkage', 0.7387813258920779), ('myclassifier__solver', 'lsqr')])
+5403  292
+ 309   55
+
