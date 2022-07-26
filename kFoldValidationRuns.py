@@ -39,6 +39,7 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     STATS_path = target_path+"STATS/"
     Features_path = results_path+"featureSelection/"
     classifiersPath = results_path+"classifiers/"
+    hyperParmPath = results_path+"hyperParamsRuns/"
     if not os.path.exists(results_path):
         os.makedirs(results_path)
     if not os.path.exists(STATS_path):
@@ -47,6 +48,8 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
         os.makedirs(Features_path)
     if not os.path.exists(classifiersPath):
         os.makedirs(classifiersPath)
+    if not os.path.exists(hyperParmPath):
+        os.makedirs(hyperParmPath)
 
     ## calculate baseline values for accuracy and f1-score
     f = open(STATS_path+'Baseline.txt','w+')
@@ -68,21 +71,28 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
     fselect.append('robust')
     
     ## run classification on the cluster
-    if doC and cluster:
-        x = 1
-        for fs in fselect:
-            for c in classifiers:
-                    arg = (target_path, X, y, n_seed, splits, c, fs, data.columns)
-                    process = mp.Process(target=runC.classify, kwargs = {'myTuple':arg})
-                    process.start()
+    classifiersInput = list()
+    for fs in fselect:
+        for c in classifiers:
+            classifiersInput.append((target_path, X, y, n_seed, splits, c, fs, data.columns))
 
-   
+    if doC and cluster:
+        pList = list()
+        for i in range(4):
+            pid = os.fork()
+            if pid:
+                pList.append(pid)
+            else:
+                runC.classify(classifiersInput[i])
+                os._exit(0)
+
+        for i, child in enumerate(pList):
+            os.waitpid(child, 0)                        
+
     ## run classification on personal computer
     elif doC:
-        classifiersInput = list()
-        for fs in fselect:
-            for c in classifiers:
-                runC.classify((target_path, X, y, n_seed, splits, c, fs, data.columns))
+        for arg in classifiersInput:
+            runC.classify(arg)
 
     ## create hearmaps for classification
     #if doC:
