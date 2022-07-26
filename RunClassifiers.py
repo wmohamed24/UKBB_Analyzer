@@ -179,8 +179,7 @@ def classify(myTuple):
     cpath = target_path+'results/classifiers/'
     fPath = target_path+'results/features/'
     rPath = target_path+'results/hyperParamsRuns/'
-    if not os.path.exists(rPath):
-        os.makedirs(rPath)
+
 
     open(cpath+c+fs+"trainValidation.txt", 'w').close()
     open(cpath+c+fs+"trainTest.txt", 'w').close()
@@ -262,7 +261,8 @@ def classify(myTuple):
         trainTest.write(str(grid_imba.best_params_)+'\n')
         trainTest.write(str(confMatrix).replace(' [', '').replace('[', '').replace(']', '') + '\n\n')
         trainTest.close()
-        
+
+'''      
 def getModel(key, params):
         if key == 'xgboost':
             return XGBClassifier(**params, use_label_encoder = False)
@@ -353,6 +353,6 @@ def Stack(myTuple):
     pool = mp.Pool(mp.cpu_count())
     pool.map(StackRun, stackInput)
     pool.close()
-            
+'''     
             
         
