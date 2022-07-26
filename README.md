@@ -25,6 +25,8 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - depending on the parameters passed will run feature selection, classification, or both
   - The feature selection and classification runs are parelized as they take a long time. If the parallelization 
     is causing issues, it probably can be traced back to this file.
+  - Note: the data that gets passed to this file to be used for classification and feature selection has to be
+    one-hot-encoded with categorical outcome
  
 #### Function: NormalRun()
   - runs either feature selection, classification, or both
@@ -59,7 +61,38 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - These are the functions doing the feature selection or helper functions for them
   - There should be no need to modify any of these functions, but they include detailed description of what they are doing 
     and the parameters needed in the python code
+    
+### RunClassifiers.py
+  - the file running each of the specified classifiers with each of the feature selection methods to produce a heatmap
+  - the resutls, which include the confusion matrices, of these runs are saved in xxxxx
+  - Note: this file doesn't produce the heatmaps -- this happens in ClassFeatureStats.py
 
+#### Function: classify()
+  - The main function of the file -- gets called to run the classification'
+  - The function recieves a combination of classification and feature selection method as well as the data.
+  - The function breaks down the data into train and testing, and then KFolds cross validation is being conducted on the train
+    data, breaking it to train and validation sets. on each of the KFold runs, Baysian search is used for hyperparameter optimization
+  - After finding the best parameters (depending on optimizing F1 or Accuracy which can be changed), the classifier is being run
+    on the test data that was split before running KFold cross validation.
+  - This whole processing of train/validation/test split is being repeated n_seed times (n_seed gets passed in UKBB_Analyzer)
+  - attributes are broken down in the function header
+
+#### Function: getParameters()
+  - A helper function for classify() that return a dictionary with hyperparameters and the values that Baysian search
+    should look through for the optimization
+    
+#### Sub-Class: MyClassifier()
+  - A sub class that will be used to run the classification runs that gets called from the Baysian search function
+  - The parameter includes an estimator, based on which an instance of the appropratie classifier will be created, and 
+    a method, based on which a subset of features chosed by that method (fselect method) will be used.
+  - The class has default values for all the hyperparameters used by all the classifiers, of which the appropraite ones are
+    used to create instance of a new classifier.
+  - After that, set_params() function is used to update these parameters during each run of the Baysian search
+  - Note: what is being optimized in these runs is what's being returned by the score() function, and if a differnt scoring
+    metric is desired, it should be calculated using standrded python libraries and returned (almost every scoring metric can
+    be calculated by only using y and yp -- which are the predicted values for y)
+  - All the functions in the class are either writing already exisiting functions of the classifiers to do the same 
+    job but with some modification to fit the code -- detailed description of each of the functions is included in the code
 
 ## Association Rule Learning: (done)
   - Input must be only one hot encoded and outcome variables has to be categorized
