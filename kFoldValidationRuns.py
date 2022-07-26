@@ -78,7 +78,7 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
 
     if doC and cluster:
         pList = list()
-        for i in range(4):
+        for i in range(len(classifiersInput)):
             pid = os.fork()
             if pid:
                 pList.append(pid)
