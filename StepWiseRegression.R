@@ -22,7 +22,7 @@ var = args[3]
 data = read.csv(fname)
 data = data[,!names(data) %in% c("X")]
 
-formula = as.formula(var + '~.')
+formula = as.formula(paste(var,'~.',sep=""))
 if (regType == 'linear'){
   full.model <- lm(formula, data = data)
   step.model <- stepAIC(full.model, direction = "both", 

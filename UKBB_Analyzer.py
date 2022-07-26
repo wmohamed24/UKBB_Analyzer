@@ -4,7 +4,7 @@ import os
 import kFoldValidationRuns as runs
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import resample
-from StatisticalAnalysis import StatisticalAnalysis
+from StatisticalAnalysis import Stats
 import multiprocessing as mp
 
 
@@ -67,8 +67,8 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "run1OHC" #name of the data file in the data folder
-    target = "GAD7_1" #name of the binarized dependent variable 
+    datafile = "run1OHCnonBin" #name of the data file in the data folder
+    target = "GAD7" #name of the binarized dependent variable 
 
 
     #Specify which data file type youa are using
@@ -90,7 +90,7 @@ def main():
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=False,doF=False,cluster=False,fselectRepeat=100,cutoff=0.7,robustFeatures=25)
+    #runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=False,doF=False,cluster=False,fselectRepeat=100,cutoff=0.7,robustFeatures=25)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -100,17 +100,18 @@ def main():
     #cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
     #'rs10462020_2.rs17031614_2', 'rs228697_2.rs10462020_2', 'rs228697_2.rs10462020_1', 'rs228697_1.rs10462020_2', 'GAD7_1']
     
-    features_datafile='run1OHC'
-    features = np.array(pd.read_csv(directory_path+"Data/"+features_datafile+".csv", index_col=0).columns)
-    cols=distillTotal('run1OHC_GAD7_1','GAD7_1',features)
+    #features_datafile='run1OHC'
+    #features = np.array(pd.read_csv(directory_path+"Data/"+features_datafile+".csv", index_col=0).columns)
+    #cols=distillTotal('run1OHC_GAD7_1','GAD7_1',features)
+    cols=importantFeatures('run1OHC_GAD7_1',data,target)
     
 
     data = data[cols]
     data.columns = data.columns.str.replace(' ', '_')
     data.columns = data.columns.str.replace('.', '_')
 
-    for col in cols:
-        print(data[col].value_counts())
+    #for col in cols:
+        #print(data[col].value_counts())
     
     continuous = list()
     categorical = list()
@@ -133,7 +134,7 @@ def main():
 
     
     #Uncomment the staistical test desired and pass the suitable parameters
-    sa=StatisticalAnalysis(directory_path,statsPath)
+    sa=Stats(directory_path,statsPath)
 
     '''
     for var in data.columns:
