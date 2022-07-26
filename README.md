@@ -7,7 +7,7 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - hasellus facilisis orci elit, sed eleifend orci porttitor quis. In quis nisi non nulla laoreet elementum. Aliquam purus tellus,
     lobortis in auctor cursus sit amet sapien.
 
-## Files Breakdown:
+## Code Breakdown:
 ### UKBB_Analyzer.py
   - The main file of the package that will be used to run all the different analyses.
   - This should be the only file that NEED to be modified to use the package -- you're welcome to navigate the other files,
@@ -94,7 +94,29 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - All the functions in the class are either writing already exisiting functions of the classifiers to do the same 
     job but with some modification to fit the code -- detailed description of each of the functions is included in the code
 
-
+### StatisticalAnalysis.py
+  - The main file for running all the stastical analysis on UKBiobank data
+  - currently, the following statistics are fully implemented: Mediation Analysis, Mendelian Randomization, Odds Ratios (includes
+    univariate logistic regression), Multivariate Linear Regression, one & two way ANOVA, Association Rule Learning,
+    Association Analysis (G-test of independence, Fisher exact test, and Chi-Square test of independence).
+    
+#### Sub-Class: Stats()
+  - The main class in StasticalAnalysis.py underwhich all the function are written
+  - To initiate an instance of the class, the directory_path as well as StasticalAnalysis path (both are created 
+    in UKBB_Analyzer.py) need to be passed.
+  - The class has an instance variable for each of the tests which would store the test results if they needed
+    to be accessed later (note: all the results are wrtiien to the StasticalAnalysis folder, so usually theses instance variables
+    won't be needed unless the results are needed to run further analysis on it)
+  - The attributes needed for each of the functions under Stats() are described in details in the python file. It must be
+    noted, though, that all the function recieves a data parameter which represent the data to run the analysis on. The structure
+    of this data differs from one type of analysis to another. For example, outcome variable has to be continuous for linear
+    regression, but it has to be categorical for logistic regression (odds ratios). There will be a discription below of the type
+    of data needed to run each stastical test.
+    
+#### Function: getParameters()
+  - A helper function for classify() that return a dictionary with hyperparameters and the values that Baysian search
+    should look through for the optimization
+   
 
 
 
