@@ -111,7 +111,7 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
 
 
 
-## Association Rule Learning: (undone)
+## Association Rule Learning: (done)
   - Input must be only one hot encoded and outcome variables has to be categorized
   - can't include continuous variables
 
@@ -123,12 +123,12 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
 ## Mendelian Randomization (undone)
   - Don't remember honestly but I think continuous and categorical non-one-hot-encoded variables are fine
 
-## Multivariate Regression (undone)
+## Multivariate Regression (done)
   - categorical variables need to be one hot encoded
   - continuous variables are okay
   - outcome variable has to be continuous
 
-## Logistic Regression (Odds Ratios) (undone)
+## Logistic Regression (Odds Ratios) (done)
   - categorical variables need to be one hot encoded
   - continuous variables are okay
   - outcome variable has to be binary or categorical
@@ -137,7 +137,7 @@ A package used to run Machine Learning as well as Statical Analysis on UK_BioBan
   - indep variables have to be categorical (preferably not one hot encoded)
   - outcome variable has to be continuous
 
-## Association Analysis (G-Test) (undone)
+## Association Analysis (G-Test) (done)
   - indep variables have to be categorical (preferably not one hot encoded)
   - outcome variable has to be continuous
   - Don't include interaction terms for this analysis

@@ -14,8 +14,8 @@ library(htmlwidgets)
 
 args <- commandArgs(trailingOnly = TRUE)
 
-path = '/Users/wael/Desktop/AyLab/MoodDisorderResearch/StatisticalAnalysis/Apriori/'
-#path <- args[1]
+
+path <- args[1]
 fname <- paste(path,'AprioriData.csv',sep="")
 data <- read.csv(fname)
 data <- data[,!names(data) %in% c("X")]
@@ -37,7 +37,7 @@ if (varOfInterest != 'none'){
 }
 
 rules <- sort(rules, decreasing = TRUE, na.last = NA, by = "lift")
-rules <- subset(rules, subset = lift > 1.9)
+rules <- subset(rules, subset = lift > 1)
 
 
 pdf(file = paste(path, 'AprioriMatrixBased.pdf', sep = ""))

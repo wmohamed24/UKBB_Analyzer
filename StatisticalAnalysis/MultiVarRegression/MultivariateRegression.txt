@@ -13,7 +13,7 @@ Dep. Variable:                   GAD7   R-squared:                       0.043
 Model:                            OLS   Adj. R-squared:                  0.043
 Method:                 Least Squares   F-statistic:                     109.5
 Date:                Tue, 26 Jul 2022   Prob (F-statistic):               0.00
-Time:                        16:03:39   Log-Likelihood:                 26435.
+Time:                        16:05:59   Log-Likelihood:                 26435.
 No. Observations:               60588   AIC:                        -5.282e+04
 Df Residuals:                   60562   BIC:                        -5.258e+04
 Df Model:                          25                                         
@@ -86,5 +86,48 @@ rs228697_2_rs17031614_1                             0.7152317572570994
 rs228697_2_rs2287161_2                              0.8658146552522057
 rs228697_1_rs139459337_2                             0.872343757699352
 rs228697_0_rs139459337_2                             0.826031664936138
+
+----------------------------------------------------------------------------------------
+Multivariate Regression resluts after stepwise adjustment: 
+
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:                   GAD7   R-squared:                       0.043
+Model:                            OLS   Adj. R-squared:                  0.043
+Method:                 Least Squares   F-statistic:                     545.4
+Date:                Tue, 26 Jul 2022   Prob (F-statistic):               0.00
+Time:                        16:06:29   Log-Likelihood:                 26430.
+No. Observations:               60588   AIC:                        -5.285e+04
+Df Residuals:                   60582   BIC:                        -5.279e+04
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+=================================================================================================================
+                                                    coef    std err          t      P>|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------------------------------------
+const                                             0.1407      0.002     70.696      0.000       0.137       0.145
+Ever_addicted_to_any_substance_or_behaviour_1     0.0779      0.003     29.128      0.000       0.073       0.083
+Townsend_deprivation_index_at_recruitment         0.0410      0.004     10.501      0.000       0.033       0.049
+Age_at_recruitment                               -0.0807      0.003    -29.197      0.000      -0.086      -0.075
+sex_1                                            -0.0317      0.001    -24.686      0.000      -0.034      -0.029
+rs10462023_1_rs139459337_2                       -0.0294      0.013     -2.312      0.021      -0.054      -0.004
+==============================================================================
+Omnibus:                    29063.523   Durbin-Watson:                   2.001
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           167506.881
+Skew:                           2.300   Prob(JB):                         0.00
+Kurtosis:                       9.722   Cond. No.                         25.2
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+
+----------------------------------------------------------------------------------------
+adjusted p-values for Regression after stepwise adjustment: 
+
+intercept                                                          0.0
+Ever_addicted_to_any_substance_or_behaviour_1   6.045405620214558e-185
+Townsend_deprivation_index_at_recruitment       1.0796398073783472e-25
+Age_at_recruitment                             1.2342817059464775e-185
+sex_1                                          1.0334796393965468e-133
+rs10462023_1_rs139459337_2                        0.020755921616682566
 
 ----------------------------------------------------------------------------------------

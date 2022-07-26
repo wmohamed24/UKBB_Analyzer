@@ -1,0 +1,36 @@
+----------------------------------------------------------------------------------------
+
+Results for one way ANOVA between Ever_addicted_to_any_substance_or_behaviour and GAD7 are: 
+
+                                                     df       sum_sq    mean_sq           F         PR(>F)
+C(Ever_addicted_to_any_substance_or_behaviour)      1.0    23.064135  23.064135  915.553519  1.262313e-199
+Residual                                        60586.0  1526.250124   0.025191         NaN            NaN
+----------------------------------------------------------------------------------------
+
+Results for follow-up Tukey test between Ever_addicted_to_any_substance_or_behaviour and GAD7 are: 
+
+   group1  group2      Diff     Lower     Upper    q-value  p-value
+0     0.0     1.0  0.081656  0.076366  0.086945  42.791436    0.001
+----------------------------------------------------------------------------------------
+
+Results for Shapiro-Wilk test to check for normality are: 
+
+w is: 0.7064377069473267/ p-value is: 0.0
+----------------------------------------------------------------------------------------
+
+Results for Levene's test to check for equality of variance are: 
+
+              Parameter    Value
+    Test statistics (W) 526.8438
+Degrees of freedom (Df)   1.0000
+                p value   0.0000
+----------------------------------------------------------------------------------------
+
+Results for the Kruskal-Wallis Test -- to be used if ANOVA assumptions are violated: 
+
+statistic: 728.3050278874563/ p-value is: 2.0929639845891156e-160
+----------------------------------------------------------------------------------------
+
+The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test
+----------------------------------------------------------------------------------------
+
