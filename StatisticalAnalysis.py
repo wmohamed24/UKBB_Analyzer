@@ -537,9 +537,6 @@ class Stats():
             os.makedirs(self.statsPath+'OddsRatios')
         currPath = self.statsPath + 'OddsRatios/'
 
-        if not os.path.exists(currPath + 'UnivariateLogistic/'):
-                os.makedirs(currPath + 'UnivariateLogistic/')
-
         oddsRatio = open(currPath + 'Odds_Ratios.txt', 'w')
 
         #Checking for Multicolinearity
@@ -628,19 +625,6 @@ class Stats():
             os.remove(currPath+'stepWiseVars.txt')
             if '(Intercept)' in newVars:
                 newVars.remove('(Intercept)')
-
-            pVal = list()
-            for var in newVars:
-                pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
-            
-            corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
-            cp = [str(a) for a in corrected_p[1]]
-    
-            adjustedPuni = pd.DataFrame(cp, newVars)
-            univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
-            univariate.write('P-Values after adjustement for univariate regression: \n\n')
-            toWrite = adjustedPuni.to_string(header = True, index = True)
-            univariate.write(toWrite+'\n')
             
             data = data[newVars + [target]]
 
@@ -683,19 +667,19 @@ class Stats():
             oddsRatio.close()
             return model_odds, model_odds2
         
-        else:
-            pVal = list()
-            for var in indep:
-                pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
-            
-            corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
-            cp = [str(a) for a in corrected_p[1]]
+        
+        pVal = list()
+        for var in indep:
+            pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
+        
+        corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
+        cp = [str(a) for a in corrected_p[1]]
 
-            adjustedPuni = pd.DataFrame(cp, indep)
-            univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
-            univariate.write('P-Values after adjustement for univariate regression: \n\n')
-            toWrite = adjustedPuni.to_string(header = True, index = True)
-            univariate.write(toWrite+'\n')
+        adjustedPuni = pd.DataFrame(cp, indep)
+        univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
+        univariate.write('P-Values after adjustement for univariate regression: \n\n')
+        toWrite = adjustedPuni.to_string(header = True, index = True)
+        univariate.write(toWrite+'\n')
 
 
         oddsRatio.close()
