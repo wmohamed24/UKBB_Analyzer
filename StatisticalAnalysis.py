@@ -770,7 +770,7 @@ class Stats():
 
         #Follow-up Test TukeyTest
         if (res.anova_summary.iloc[0,4] > alpha) and (not followUp):
-            oneWayANOVA.write('The p-value is lower than alpha; hence, no follow-up test was conducted\n')
+            oneWayANOVA.write('The p-value is higher than alpha; hence, no follow-up test was conducted\n')
         else:
             oneWayANOVA.write('Results for follow-up Tukey test between ' + indep + ' and ' + dep + ' are: \n\n')
             followUp = stat()
@@ -827,7 +827,7 @@ class Stats():
         
         #The dunn's test -- follow up
         if (Kruskal[1] > alpha) and (not followUp) or True:
-            oneWayANOVA.write('The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
+            oneWayANOVA.write('The p-value is higher than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
         else:
             FSA = importr('FSA')
             dunnTest, formulaMaker, names = r['dunnTest'], r['as.formula'], r['names']
@@ -932,7 +932,7 @@ class Stats():
         
         #Follow-up Test TukeyTest
         if (all(x > alpha  for x in res.anova_summary.iloc[1:4, 4].tolist())) and (not followUp):
-            twoWayANOVA.write('All the p-values is lower than alpha; hence, no follow-up test was conducted\n\n')
+            twoWayANOVA.write('All the p-values is higher than alpha; hence, no follow-up test was conducted\n\n')
         else:
             tukey = list()
             message = list()
@@ -1010,7 +1010,7 @@ class Stats():
         
         #The dunn's test -- follow up
         if (all(x > alpha  for x in scheirerANOVA['p.value'].tolist())) and (not followUp):
-            twoWayANOVA.write('All the p-values is lower than alpha; hence, no follow-up test was conducted for ScheirerRayHare test\n\n')
+            twoWayANOVA.write('All the p-values is higher than alpha; hence, no follow-up test was conducted for ScheirerRayHare test\n\n')
         
         else:
             FSA = importr('FSA')
