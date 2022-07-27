@@ -95,9 +95,9 @@ doC, doF, cluster, fselectRepeat, cutoff, robustFeatures):
             runC.classify(arg)
 
     ## create hearmaps for classification
-    #if doC:
-        #st.create_STATS(target_path)
-        #st.heatmap(target_path, target, True)
-        #st.heatmap(target_path, target, False)
+    if doC:
+        st.create_STATS(target_path)
+        st.heatmap(target_path, target, True)
+        st.heatmap(target_path, target, False)
     
     
