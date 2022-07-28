@@ -537,9 +537,6 @@ class Stats():
             os.makedirs(self.statsPath+'OddsRatios')
         currPath = self.statsPath + 'OddsRatios/'
 
-        if not os.path.exists(currPath + 'UnivariateLogistic/'):
-                os.makedirs(currPath + 'UnivariateLogistic/')
-
         oddsRatio = open(currPath + 'Odds_Ratios.txt', 'w')
 
         #Checking for Multicolinearity
@@ -628,19 +625,6 @@ class Stats():
             os.remove(currPath+'stepWiseVars.txt')
             if '(Intercept)' in newVars:
                 newVars.remove('(Intercept)')
-
-            pVal = list()
-            for var in newVars:
-                pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
-            
-            corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
-            cp = [str(a) for a in corrected_p[1]]
-    
-            adjustedPuni = pd.DataFrame(cp, newVars)
-            univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
-            univariate.write('P-Values after adjustement for univariate regression: \n\n')
-            toWrite = adjustedPuni.to_string(header = True, index = True)
-            univariate.write(toWrite+'\n')
             
             data = data[newVars + [target]]
 
@@ -683,19 +667,19 @@ class Stats():
             oddsRatio.close()
             return model_odds, model_odds2
         
-        else:
-            pVal = list()
-            for var in indep:
-                pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
-            
-            corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
-            cp = [str(a) for a in corrected_p[1]]
+        
+        pVal = list()
+        for var in indep:
+            pVal.append(self.UniVariateLogisitc(data[var], data[target], uniPath, continuous, categorical))
+        
+        corrected_p = fdr_correction(pVal, alpha=0.05, method='indep')
+        cp = [str(a) for a in corrected_p[1]]
 
-            adjustedPuni = pd.DataFrame(cp, indep)
-            univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
-            univariate.write('P-Values after adjustement for univariate regression: \n\n')
-            toWrite = adjustedPuni.to_string(header = True, index = True)
-            univariate.write(toWrite+'\n')
+        adjustedPuni = pd.DataFrame(cp, indep)
+        univariate = open(uniPath +'UnivariateLogisticRegression.txt', 'a')
+        univariate.write('P-Values after adjustement for univariate regression: \n\n')
+        toWrite = adjustedPuni.to_string(header = True, index = True)
+        univariate.write(toWrite+'\n')
 
 
         oddsRatio.close()
@@ -770,7 +754,7 @@ class Stats():
 
         #Follow-up Test TukeyTest
         if (res.anova_summary.iloc[0,4] > alpha) and (not followUp):
-            oneWayANOVA.write('The p-value is lower than alpha; hence, no follow-up test was conducted\n')
+            oneWayANOVA.write('The p-value is higher than alpha; hence, no follow-up test was conducted\n')
         else:
             oneWayANOVA.write('Results for follow-up Tukey test between ' + indep + ' and ' + dep + ' are: \n\n')
             followUp = stat()
@@ -827,7 +811,7 @@ class Stats():
         
         #The dunn's test -- follow up
         if (Kruskal[1] > alpha) and (not followUp) or True:
-            oneWayANOVA.write('The p-value is lower than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
+            oneWayANOVA.write('The p-value is higher than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
         else:
             FSA = importr('FSA')
             dunnTest, formulaMaker, names = r['dunnTest'], r['as.formula'], r['names']
@@ -932,7 +916,7 @@ class Stats():
         
         #Follow-up Test TukeyTest
         if (all(x > alpha  for x in res.anova_summary.iloc[1:4, 4].tolist())) and (not followUp):
-            twoWayANOVA.write('All the p-values is lower than alpha; hence, no follow-up test was conducted\n\n')
+            twoWayANOVA.write('All the p-values is higher than alpha; hence, no follow-up test was conducted\n\n')
         else:
             tukey = list()
             message = list()
@@ -1010,7 +994,7 @@ class Stats():
         
         #The dunn's test -- follow up
         if (all(x > alpha  for x in scheirerANOVA['p.value'].tolist())) and (not followUp):
-            twoWayANOVA.write('All the p-values is lower than alpha; hence, no follow-up test was conducted for ScheirerRayHare test\n\n')
+            twoWayANOVA.write('All the p-values is higher than alpha; hence, no follow-up test was conducted for ScheirerRayHare test\n\n')
         
         else:
             FSA = importr('FSA')
