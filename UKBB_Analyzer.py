@@ -90,11 +90,11 @@ def main():
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=True,doF=False,cluster=True,fselectRepeat=0,cutoff=0.7,robustFeatures=25)
+    #runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=True,doF=False,cluster=True,fselectRepeat=0,cutoff=0.7,robustFeatures=25)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
-    '''
+    
     #Statistical Analysis
     
     #cols = ['Townsend deprivation index at recruitment', 'Ever addicted to any substance or behaviour_1',
@@ -124,26 +124,33 @@ def main():
     
     if target in continuous:
         continuous.remove(target)
-
-
-
+    
+    data.drop(continuous, axis = 1, inplace=True)
+    #print(data.columns)
     
     #Uncomment the staistical test desired and pass the suitable parameters
     sa=Stats(directory_path,statsPath)
-
-    #data.drop(labels=continuous,axis=1,inplace=True)
-    #for var in data.columns:
-    #    if var != 'GAD7':
-    #        print(var)
-    #        sa.ANOVA(data = data, dep = target, indep=[var], oneWay=True, followUp=True)
+    #sa.ANOVA(data = data, dep = target, indep='rs10462020_rs1801260', oneWay=True, followUp=False)
     
+    #data.drop(labels=continuous,axis=1,inplace=True)
+    # for var in data.columns:
+    #     if var != 'GAD7' and var != 'sex':
 
-    print(data['rs228697_2_rs2287161_0'].value_counts())
+    #         sa.ANOVA(data = data, dep = target, indep=['rs139459337_rs10838524'], oneWay=True, followUp=True)
+    #         break
+    
+    temp = np.array(data['GAD7_1'].values)
+    temp -=1
+    temp = np.absolute(temp)
+    data['GAD7_1'] = temp
+    print(data['GAD7_1'].value_counts())
+
+
     #MultiReg = sa.Multivariate_Reg(data = data, target=target, continuous = continuous, stepwise = True, categorical = categorical)
     #oddsRatios = sa.Odds_Ratios(data = data, target=target, continuous=continuous, stepwise=False, categorical=categorical)
     #assAnalyis = sa.Association_Analysis(data = data, vars = data.drop(continuous, axis = 1), oneTarget=True, target=target)
     #assRuleLearning = sa.Association_Rule_Learning(data=data.drop(labels=continuous,axis=1,inplace=False), rhs = 'GAD7_1',max_items=4,min_confidence=0.01,min_support=0.0001)
     #sa.Mediation_Analysis(data=data, dep = 'GAD7', mediator='Townsend_deprivation_index_at_recruitment', indep = 'rs10838524_2_rs2287161_1', path = statsPath, continuous=continuous)
     #sa.Mendelian_Ranomization(data = data, dep = 'GAD7_1', indep = 'Chronotype_1', inst='rs10838524_2_rs2287161_1', path = statsPath)
-    '''
+    
 main()

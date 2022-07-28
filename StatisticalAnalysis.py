@@ -3,7 +3,7 @@ import statsmodels.formula.api as smf
 from linearmodels.iv import IV2SLS
 import pandas as pd
 import statsmodels.api as sm
-from bioinfokit.analys import stat
+import bioinfokit.analys
 from mne.stats import fdr_correction
 import researchpy as rp
 from statsmodels.stats.outliers_influence import variance_inflation_factor
@@ -745,7 +745,7 @@ class Stats():
 
         #Conducting the ANOVA test
         oneWayANOVA.write('Results for one way ANOVA between ' + indep + ' and ' + dep + ' are: \n\n')
-        res = stat()
+        res = bioinfokit.analys.stat()
         res.anova_stat(df=data, res_var=dep, anova_model=formula)
         asummary = res.anova_summary.to_string(header=True, index=True)
         oneWayANOVA.write(asummary + '\n')
@@ -810,19 +810,16 @@ class Stats():
 
         
         #The dunn's test -- follow up
-        if (Kruskal[1] > alpha) and (not followUp) or True:
+        if (Kruskal[1] > alpha) and (not followUp):
             oneWayANOVA.write('The p-value is higher than alpha; hence, no follow-up test was conducted for Kruskal test\n')    
         else:
             FSA = importr('FSA')
             dunnTest, formulaMaker, names = r['dunnTest'], r['as.formula'], r['names']
-
+            data = data.astype({indep: 'int64'})
             with localconverter(ro.default_converter + pandas2ri.converter):
                 rDf = ro.conversion.py2rpy(data)
 
             formula = formulaMaker(dep + ' ~ ' + indep)
-            print(names(rDf))
-            print(formula)
-            print(rDf)
             dunnTwoWay = dunnTest(formula, data=rDf, method="bonferroni")
 
             asData, doCall, rbind = r['as.data.frame'], r['do.call'], r['rbind']
@@ -850,6 +847,13 @@ class Stats():
     def twoWay_ANOVA(self, data, dep, indep, alpha, between, followUp):
             
         results = dict()
+        data = data.astype({indep[0]:'int64'})
+        data = data.astype({indep[1]:'int64'})
+        if len(data[indep[0]].value_counts()) < len(data[indep[1]].value_counts()):
+            temp = indep.pop(0)
+            indep.append(temp)
+        
+        print(indep)
         if not os.path.exists(self.statsPath+'twoWayANOVA'):
             os.makedirs(self.statsPath+'twoWayANOVA')
         fname = indep[0] + '_' + indep[1]
@@ -1002,26 +1006,29 @@ class Stats():
             data['interaction'] = data[indep[0]].astype(str) + '_' + data[indep[1]].astype(str)
             with localconverter(ro.default_converter + pandas2ri.converter):
                 rDf = ro.conversion.py2rpy(data)
+            indep.append('interaction')            
+            for var in indep:
+                formula = formulaMaker(dep + ' ~ ' + var)
+                dunnTwoWay = dunnTest(formula, data=rDf, method="bonferroni")
 
-            formula = formulaMaker(dep + ' ~ interaction')
-            dunnTwoWay = dunnTest(formula, data=rDf, method="bonferroni")
+                asData, doCall, rbind = r['as.data.frame'], r['do.call'], r['rbind']
+                dunnTwoWay = asData(doCall(rbind, dunnTwoWay))
 
-            asData, doCall, rbind = r['as.data.frame'], r['do.call'], r['rbind']
-            dunnTwoWay = asData(doCall(rbind, dunnTwoWay))
+                with localconverter(ro.default_converter + pandas2ri.converter):
+                    dunnTwoWay = ro.conversion.rpy2py(dunnTwoWay)
 
-            with localconverter(ro.default_converter + pandas2ri.converter):
-                dunnTwoWay = ro.conversion.rpy2py(dunnTwoWay)
-
-            dunnTwoWay.drop(['method', 'dtres'], inplace = True)
-            for col in ['Z', 'P.unadj', 'P.adj']:
-                dunnTwoWay[col] = pd.to_numeric(dunnTwoWay[col])
-                dunnTwoWay[col] = np.round(dunnTwoWay[col], decimals = 5)
-            
-            twoWayANOVA.write("Results for follow-up Dunn's test between " + indep[0] + ' & ' + indep[1] + " and " + dep + " are: \n\n")
-            dunnSummary = dunnTwoWay.to_string(header=True, index=False)
-            twoWayANOVA.write(dunnSummary + '\n\n')
+                dunnTwoWay.drop(['method', 'dtres'], inplace = True)
+                for col in ['Z', 'P.unadj', 'P.adj']:
+                    dunnTwoWay[col] = pd.to_numeric(dunnTwoWay[col])
+                    dunnTwoWay[col] = np.round(dunnTwoWay[col], decimals = 5)
+                if var == 'interaction':
+                    twoWayANOVA.write("Results for follow-up Dunn's test between " + indep[0] + ' & ' + indep[1] + " and " + dep + " are: \n\n")
+                else:
+                    twoWayANOVA.write("Results for follow-up Dunn's test between " + var + " and " + dep + " are: \n\n")
+                dunnSummary = dunnTwoWay.to_string(header=True, index=False)
+                twoWayANOVA.write(dunnSummary + '\n\n')
         
-        twoWayANOVA.write('----------------------------------------------------------------------------------------\n\n')
+                twoWayANOVA.write('----------------------------------------------------------------------------------------\n\n')
         
         self.twoANOVA = results
         return results
