@@ -67,13 +67,13 @@ def main():
     if not os.path.exists(statsPath):
         os.makedirs(statsPath)
 
-    datafile = "run1OHC" #name of the data file in the data folder
-    target = "GAD7_1" #name of the binarized dependent variable 
+    #datafile = "run1OHC" #name of the data file in the data folder
+    #target = "GAD7_1" #name of the binarized dependent variable 
 
 
     #Specify which data file type youa are using
     
-    data = pd.read_csv(directory_path+"Data/"+datafile+".csv", index_col=0)
+    #data = pd.read_csv(directory_path+"Data/"+datafile+".csv", index_col=0)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
@@ -90,7 +90,11 @@ def main():
     n_seed = 5 #Number of validations
     splits = 10 #Number of folds or splits in each validation run
 
-    runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=True,doF=False,cluster=True,fselectRepeat=0,cutoff=0.7,robustFeatures=25)
+    for i in range(2,7):
+        datafile = "sample"+str(i)+'_OHC'
+        target = "GAD7_1"
+        data = pd.read_csv(directory_path+"Data/"+datafile+".csv", index_col=0)
+        runs.NormalRun(data, directory_path, datafile, target, classifiers, fselect, n_seed, splits, doC=False,doF=True,cluster=True,fselectRepeat=50,cutoff=0.7,robustFeatures=25)
 
     #----------------------------------------------------------------------------------------
     #----------------------------------------------------------------------------------------
